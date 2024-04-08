@@ -1,0 +1,254 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>stm32-LCD | WildIronJay</title><meta name="author" content="WildIronJay"><meta name="copyright" content="WildIronJay"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="LCD显示    SRAM与FLASH最近在玩STM32的LCD显示时，发现了一些关于内存空间的问题。 stm32的FLASH可以类比于ROM（相当于硬盘），SRAM可以类比于RAM（内存），但也有一些区别。 图片的表示有多种方式：RGB、HSV等。在传输图片时，一般是将图片的RGB转换成三种颜色对应的数字，数字的范围我们一般是采用从0-255，但是这也不是绝对的，可将范围变大变小，有时为了减少数">
+<meta property="og:type" content="article">
+<meta property="og:title" content="stm32-LCD">
+<meta property="og:url" content="https://myblog-mu-ashen.vercel.app/2024/04/08/stm32-LCD/index.html">
+<meta property="og:site_name" content="WildIronJay">
+<meta property="og:description" content="LCD显示    SRAM与FLASH最近在玩STM32的LCD显示时，发现了一些关于内存空间的问题。 stm32的FLASH可以类比于ROM（相当于硬盘），SRAM可以类比于RAM（内存），但也有一些区别。 图片的表示有多种方式：RGB、HSV等。在传输图片时，一般是将图片的RGB转换成三种颜色对应的数字，数字的范围我们一般是采用从0-255，但是这也不是绝对的，可将范围变大变小，有时为了减少数">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://image.jiajie.online/img/LCD/cover.jpg">
+<meta property="article:published_time" content="2024-04-08T13:47:29.000Z">
+<meta property="article:modified_time" content="2024-04-08T13:55:30.340Z">
+<meta property="article:author" content="WildIronJay">
+<meta property="article:tag" content="嵌入式">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://image.jiajie.online/img/LCD/cover.jpg"><link rel="shortcut icon" href="https://image.jiajie.online/img/image0.jpeg"><link rel="canonical" href="https://myblog-mu-ashen.vercel.app/2024/04/08/stm32-LCD/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//fonts.googleapis.com" crossorigin=""/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Titillium+Web&amp;display=swap" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: 'Just',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'stm32-LCD',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-04-08 21:55:30'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><link rel="stylesheet" href="/css/custom.css"><!-- hexo injector head_end start --><link rel="stylesheet" href="https://cdn.cbd.int/hexo-butterfly-clock-anzhiyu/lib/clock.min.css" /><!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://image.jiajie.online/img/image0.jpeg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">13</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">8</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-heartbeat"></i><span> 清单</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://image.jiajie.online/img/LCD/cover.jpg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">WildIronJay</a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-heartbeat"></i><span> 清单</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">stm32-LCD</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2024-04-08T13:47:29.000Z" title="Created 2024-04-08 21:47:29">2024-04-08</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2024-04-08T13:55:30.340Z" title="Updated 2024-04-08 21:55:30">2024-04-08</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="stm32-LCD"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post View:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="LCD显示-SRAM与FLASH"><a href="#LCD显示-SRAM与FLASH" class="headerlink" title="LCD显示    SRAM与FLASH"></a>LCD显示    SRAM与FLASH</h2><p>最近在玩STM32的LCD显示时，发现了一些关于内存空间的问题。</p>
+<p>stm32的FLASH可以类比于ROM（相当于硬盘），SRAM可以类比于RAM（内存），但也有一些区别。</p>
+<p>图片的表示有多种方式：RGB、HSV等。在传输图片时，一般是将图片的RGB转换成三种颜色对应的数字，数字的范围我们一般是采用从0-255，但是这也不是绝对的，可将范围变大变小，有时为了减少数据量，适当牺牲色彩的细腻也是可以接受的。由于采用的芯片STM32F103C8T6的SRAM太小，因此采用16bety的数据对每个像素进行表示，这依然有两种方式：</p>
+<p>RGB565：用5位表示红、6位表示绿、5位表示蓝<br>RGB555：16位数据中用5位表示红、5位表示绿、5位表示蓝，浪费一位</p>
+<p>这里采用RGB565的方式。</p>
+<p>由于我使用的屏幕是128*160分辨率，故需要先对图片进行按比例缩放，同时将图片数据解析为数字信息。采用python实现该功能：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> PIL <span class="keyword">import</span> Image</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">resize_and_process_image_to_hex</span>(<span class="params">image_path, output_image_path, output_text_path</span>):</span><br><span class="line">    <span class="comment"># Load and resize the image</span></span><br><span class="line">    img = Image.<span class="built_in">open</span>(image_path)</span><br><span class="line">    img_resized = img.resize((<span class="number">128</span>, <span class="number">160</span>), Image.ANTIALIAS)</span><br><span class="line">    img_resized.save(output_image_path)</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># Convert to RGB and get numpy array</span></span><br><span class="line">    img_rgb = img_resized.convert(<span class="string">&#x27;RGB&#x27;</span>)</span><br><span class="line">    img_array = np.array(img_rgb)</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># Initialize a list to hold the processed pixel values in hex</span></span><br><span class="line">    hex_values = []</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Process each pixel</span></span><br><span class="line">    <span class="keyword">for</span> row <span class="keyword">in</span> img_array:</span><br><span class="line">        <span class="keyword">for</span> pixel <span class="keyword">in</span> row:</span><br><span class="line">            r, g, b = pixel</span><br><span class="line">            <span class="comment"># Convert to 5-6-5 bit RGB</span></span><br><span class="line">            r_565 = r &gt;&gt; <span class="number">3</span></span><br><span class="line">            g_565 = g &gt;&gt; <span class="number">2</span></span><br><span class="line">            b_565 = b &gt;&gt; <span class="number">3</span></span><br><span class="line">            rgb_565 = (r_565 &lt;&lt; <span class="number">11</span>) | (g_565 &lt;&lt; <span class="number">5</span>) | b_565</span><br><span class="line">            <span class="comment"># Split into high and low bytes and convert to hex</span></span><br><span class="line">            high_byte = (rgb_565 &gt;&gt; <span class="number">8</span>) &amp; <span class="number">0xFF</span></span><br><span class="line">            low_byte = rgb_565 &amp; <span class="number">0xFF</span></span><br><span class="line">            hex_values.append(<span class="string">f&quot;0X<span class="subst">&#123;low_byte:02X&#125;</span>&quot;</span>)</span><br><span class="line">            hex_values.append(<span class="string">f&quot;0X<span class="subst">&#123;high_byte:02X&#125;</span>&quot;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Write to file, with 12 hex values per line</span></span><br><span class="line">    <span class="keyword">with</span> <span class="built_in">open</span>(output_text_path, <span class="string">&quot;w&quot;</span>) <span class="keyword">as</span> file:</span><br><span class="line">        <span class="keyword">for</span> i, value <span class="keyword">in</span> <span class="built_in">enumerate</span>(hex_values, start=<span class="number">1</span>):</span><br><span class="line">            <span class="keyword">if</span> i % <span class="number">12</span> == <span class="number">0</span>:  <span class="comment"># After every 12 values, add a newline</span></span><br><span class="line">                file.write(value + <span class="string">&quot;,\n&quot;</span>)</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                file.write(value + <span class="string">&quot;,&quot;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">image_path = <span class="string">&quot;./sample.jpg&quot;</span>  <span class="comment"># This should be the path to the image you want to process.</span></span><br><span class="line">output_image_path = <span class="string">&quot;./resized_image.png&quot;</span>  <span class="comment"># Path where the resized image will be saved.</span></span><br><span class="line">output_text_path = <span class="string">&quot;./pixel_values_hex.txt&quot;</span>  <span class="comment"># Path where the hex values will be saved.</span></span><br><span class="line">resize_and_process_image_to_hex(image_path, output_image_path, output_text_path)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><code>sample.jpg</code>为需要处理的图片；<code>output_image_path</code> 为输出的128*160分辨率图片；<code>output_text_path</code>为输出的图片转换成RGB565的十六进制的数据。</p>
+<p>STM32的工程代码省略了。</p>
+<p><img src="https://image.jiajie.online/img/LCD/wrong.jpg" alt="wrong"></p>
+<p>在编译时，出现了如上报错，这是因为在将图片显示在128*160分辨率的显示屏上时，图片转换的数据过多，__STM32F103C8T6，LQFP48，FLASH：64K， SRAM：20K；__在使用SRAM更大的__STM32F103ZET6，FLASH：512K，SRAM：64K__运行程序得到如下结果：</p>
+<p><img src="https://image.jiajie.online/img/LCD/test.jpg" alt="test"></p>
+<p><code>RW-data + ZI-data</code>构成SRAM，<code>Code + RO-Data + RW-Data</code>构成FLASH。所以超过了STM32F103C8T6的SRAM，这时一般需要更换SRAM更大的芯片，但是依然有缓兵之计，__RO-data是 Read Only 只读常量的大小，如const型。__因此只需要将巨大的数组变成const类型就可以：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//unsigned char pic1[40960] = &#123;...&#125;  </span></span><br><span class="line"><span class="type">const</span> <span class="type">unsigned</span> <span class="type">char</span> pic1[<span class="number">40960</span>] = &#123;&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://image.jiajie.online/img/LCD/solve.jpg" alt="solve"></p>
+<p>果然成功编译！</p>
+<p>接线：</p>
+<table>
+<thead>
+<tr>
+<th align="center">LCD</th>
+<th align="center">STM32F103C8T6</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">GND</td>
+<td align="center">电源地</td>
+</tr>
+<tr>
+<td align="center">VCC</td>
+<td align="center">接5V或3.3v电源</td>
+</tr>
+<tr>
+<td align="center">SCL</td>
+<td align="center">接PA5（SCL）</td>
+</tr>
+<tr>
+<td align="center">SDA</td>
+<td align="center">接PA7（SDA）</td>
+</tr>
+<tr>
+<td align="center">RES</td>
+<td align="center">接PB0</td>
+</tr>
+<tr>
+<td align="center">DC</td>
+<td align="center">接PB1</td>
+</tr>
+<tr>
+<td align="center">CS</td>
+<td align="center">接PA4</td>
+</tr>
+<tr>
+<td align="center">BL</td>
+<td align="center">接PB10</td>
+</tr>
+<tr>
+<td align="center">K1</td>
+<td align="center">接PB6</td>
+</tr>
+<tr>
+<td align="center">K2</td>
+<td align="center">接PB7</td>
+</tr>
+<tr>
+<td align="center">K3</td>
+<td align="center">接PB8</td>
+</tr>
+<tr>
+<td align="center">K4</td>
+<td align="center">接PB9</td>
+</tr>
+</tbody></table>
+<p><em>K1、K2、K3、K4为按键，可不接</em></p>
+<p>最后结果图如下：</p>
+<p><img src="https://image.jiajie.online/img/LCD/result.jpg" alt="result"></p>
+</article><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E5%B5%8C%E5%85%A5%E5%BC%8F/">嵌入式</a></div><div class="post_share"><div class="social-share" data-image="https://image.jiajie.online/img/LCD/cover.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2024/04/07/stm32-remote/"><img class="next-cover" src="https://image.jiajie.online/img/remote/remote_cover.png" onerror="onerror=null;src='/assests/404.png'" alt="cover of next post"><div class="pagination-info"><div class="label">Next Post</div><div class="next_info">STM32F10*系列单片机开发</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>Related Articles</span></div><div class="relatedPosts-list"><div><a href="/2024/02/28/RC522/" title="RC522"><img class="cover" src="https://image.jiajie.online/img/esp_rc.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-02-28</div><div class="title">RC522</div></div></a></div><div><a href="/2024/04/07/stm32-remote/" title="STM32F10*系列单片机开发"><img class="cover" src="https://image.jiajie.online/img/remote/remote_cover.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-04-07</div><div class="title">STM32F10*系列单片机开发</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://image.jiajie.online/img/image0.jpeg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">WildIronJay</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">13</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">8</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/huangjj979"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/huangjj979" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:3201223340@qq.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content"><center><b>Welcome to HJJ's Blog<br><b>--- 网站域名 ---<br><a target="_blank" rel="noopener" href="https://www.jiajie.online" title="网站域名" class="anno_content"><font color="#5ea6e5">jiajie.online</font></a><br>--- 🍧ChatGPT🍧 ---<br><a target="_blank" rel="noopener" href="http://120.26.208.83:3000" title="自己搭建的chatgpt" class="anno_content"><font color="#5ea6e5">ChatGPT</font></a></center></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Catalog</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#LCD%E6%98%BE%E7%A4%BA-SRAM%E4%B8%8EFLASH"><span class="toc-number">1.</span> <span class="toc-text">LCD显示    SRAM与FLASH</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Post</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2024/04/08/stm32-LCD/" title="stm32-LCD"><img src="https://image.jiajie.online/img/LCD/cover.jpg" onerror="this.onerror=null;this.src='/assests/404.png'" alt="stm32-LCD"/></a><div class="content"><a class="title" href="/2024/04/08/stm32-LCD/" title="stm32-LCD">stm32-LCD</a><time datetime="2024-04-08T13:47:29.000Z" title="Created 2024-04-08 21:47:29">2024-04-08</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/04/07/stm32-remote/" title="STM32F10*系列单片机开发"><img src="https://image.jiajie.online/img/remote/remote_cover.png" onerror="this.onerror=null;this.src='/assests/404.png'" alt="STM32F10*系列单片机开发"/></a><div class="content"><a class="title" href="/2024/04/07/stm32-remote/" title="STM32F10*系列单片机开发">STM32F10*系列单片机开发</a><time datetime="2024-04-07T11:31:53.000Z" title="Created 2024-04-07 19:31:53">2024-04-07</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/02/28/RC522/" title="RC522"><img src="https://image.jiajie.online/img/esp_rc.png" onerror="this.onerror=null;this.src='/assests/404.png'" alt="RC522"/></a><div class="content"><a class="title" href="/2024/02/28/RC522/" title="RC522">RC522</a><time datetime="2024-02-28T12:03:08.000Z" title="Created 2024-02-28 20:03:08">2024-02-28</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/19/dji-ManiFold2-C/" title="dji Manifold2 C++开发"><img src="https://image.jiajie.online/img/dji_C++.png" onerror="this.onerror=null;this.src='/assests/404.png'" alt="dji Manifold2 C++开发"/></a><div class="content"><a class="title" href="/2024/01/19/dji-ManiFold2-C/" title="dji Manifold2 C++开发">dji Manifold2 C++开发</a><time datetime="2024-01-18T16:37:43.000Z" title="Created 2024-01-19 00:37:43">2024-01-19</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/19/djiManifold2%20building%20python3-8/" title="dji妙算2装python3.8"><img src="https://image.jiajie.online/img/Manifold.png" onerror="this.onerror=null;this.src='/assests/404.png'" alt="dji妙算2装python3.8"/></a><div class="content"><a class="title" href="/2024/01/19/djiManifold2%20building%20python3-8/" title="dji妙算2装python3.8">dji妙算2装python3.8</a><time datetime="2024-01-18T16:37:43.000Z" title="Created 2024-01-19 00:37:43">2024-01-19</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2023 - 2024 By WildIronJay</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Switch Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between single-column and double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><button id="chat_btn" type="button" title="Chat"><i class="fas fa-sms"></i></button><button id="go-up" type="button" title="Back To Top"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><div class="js-pjax"></div><script defer src="/js/cursor.js"></script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="true"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><!-- hexo injector body_end start --><script data-pjax>
+  function butterfly_clock_anzhiyu_injector_config(){
+    var parent_div_git = document.getElementsByClassName('sticky_layout')[0];
+    var item_html = '<div class="card-widget card-clock"><div class="card-glass"><div class="card-background"><div class="card-content"><div id="hexo_electric_clock"><img class="entered loading" id="card-clock-loading" src="https://cdn.cbd.int/hexo-butterfly-clock-anzhiyu/lib/loading.gif" style="height: 120px; width: 100%;" data-ll-status="loading"/></div></div></div></div></div>';
+    console.log('已挂载butterfly_clock_anzhiyu')
+    if(parent_div_git) {
+      parent_div_git.insertAdjacentHTML("afterbegin",item_html)
+    }
+  }
+  var elist = 'null'.split(',');
+  var cpage = location.pathname;
+  var epage = '/';
+  var qweather_key = 'c948a17d32c44033a149cbce4f29b58d';
+  var gaud_map_key = 'f2d32668a84eb7d9adb95c257d70fb30';
+  var baidu_ak_key = 'undefined';
+  var flag = 0;
+  var clock_rectangle = '113.34532,23.15624';
+  var clock_default_rectangle_enable = 'false';
+
+  for (var i=0;i<elist.length;i++){
+    if (cpage.includes(elist[i])){
+      flag++;
+    }
+  }
+
+  if ((epage ==='all')&&(flag == 0)){
+    butterfly_clock_anzhiyu_injector_config();
+  }
+  else if (epage === cpage){
+    butterfly_clock_anzhiyu_injector_config();
+  }
+  </script><script src="https://widget.qweather.net/simple/static/js/he-simple-common.js?v=2.0"></script><script data-pjax src="https://cdn.cbd.int/hexo-butterfly-clock-anzhiyu/lib/clock.min.js"></script><!-- hexo injector body_end end --><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"left","width":150,"height":300},"mobile":{"show":true},"log":false});</script></body></html>

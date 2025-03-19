@@ -1,0 +1,395 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>stm32 基础 | WildIronJay</title><meta name="author" content="WildIronJay"><meta name="copyright" content="WildIronJay"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="GPIO工作原理八种输入输出模式：GPIO_Mode_AIN 模拟输入 GPIO_Mode_IN_FLOATING 浮空输入特点是 引脚内部没有上拉或下拉电阻，引脚的电平状态完全由外部电路决定。如果外部没有明确的电平信号，引脚可能会处于一个不确定的状态（即“浮空”状态）。 比如在使能USART通信时，接收信号的引脚就要设置为浮空输入。 I&#x2F;O的电平状态是不确定的，完全由外部输入决定 GP">
+<meta property="og:type" content="article">
+<meta property="og:title" content="stm32 基础">
+<meta property="og:url" content="https://myblog-mu-ashen.vercel.app/2025/03/19/stm32-basics/index.html">
+<meta property="og:site_name" content="WildIronJay">
+<meta property="og:description" content="GPIO工作原理八种输入输出模式：GPIO_Mode_AIN 模拟输入 GPIO_Mode_IN_FLOATING 浮空输入特点是 引脚内部没有上拉或下拉电阻，引脚的电平状态完全由外部电路决定。如果外部没有明确的电平信号，引脚可能会处于一个不确定的状态（即“浮空”状态）。 比如在使能USART通信时，接收信号的引脚就要设置为浮空输入。 I&#x2F;O的电平状态是不确定的，完全由外部输入决定 GP">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://image.jiajie.me/img/Embedded%20system/stm32f103.png">
+<meta property="article:published_time" content="2025-03-19T09:34:15.000Z">
+<meta property="article:modified_time" content="2025-03-19T09:39:12.064Z">
+<meta property="article:author" content="WildIronJay">
+<meta property="article:tag" content="嵌入式">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://image.jiajie.me/img/Embedded%20system/stm32f103.png"><link rel="shortcut icon" href="https://image.jiajie.me/img/image0.jpeg"><link rel="canonical" href="https://myblog-mu-ashen.vercel.app/2025/03/19/stm32-basics/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//fonts.googleapis.com" crossorigin=""/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Titillium+Web&amp;display=swap" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: 'Just',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'stm32 基础',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: undefined,
+  isToc: true,
+  postUpdate: '2025-03-19 17:39:12'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><link rel="stylesheet" href="/css/custom.css"><!-- hexo injector head_end start --><link rel="stylesheet" href="https://cdn.cbd.int/hexo-butterfly-clock-anzhiyu/lib/clock.min.css" /><!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://image.jiajie.me/img/image0.jpeg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">18</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">10</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">5</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-heartbeat"></i><span> 清单</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://image.jiajie.me/img/Embedded system/stm32f103.png')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">WildIronJay</a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-heartbeat"></i><span> 清单</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">stm32 基础</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2025-03-19T09:34:15.000Z" title="Created 2025-03-19 17:34:15">2025-03-19</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2025-03-19T09:39:12.064Z" title="Updated 2025-03-19 17:39:12">2025-03-19</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="stm32 基础"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post View:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="GPIO工作原理"><a href="#GPIO工作原理" class="headerlink" title="GPIO工作原理"></a>GPIO工作原理</h2><h3 id="八种输入输出模式："><a href="#八种输入输出模式：" class="headerlink" title="八种输入输出模式："></a>八种输入输出模式：</h3><p>GPIO_Mode_AIN 模拟输入</p>
+<h4 id="GPIO-Mode-IN-FLOATING-浮空输入"><a href="#GPIO-Mode-IN-FLOATING-浮空输入" class="headerlink" title="GPIO_Mode_IN_FLOATING 浮空输入"></a>GPIO_Mode_IN_FLOATING 浮空输入</h4><p>特点是 <strong>引脚内部没有上拉或下拉电阻</strong>，引脚的电平状态完全由外部电路决定。如果外部没有明确的电平信号，引脚可能会处于一个不确定的状态（即“浮空”状态）。</p>
+<p>比如在使能USART通信时，接收信号的引脚就要设置为浮空输入。</p>
+<p><strong>I&#x2F;O的电平状态是不确定的，完全由外部输入决定</strong></p>
+<h4 id="GPIO-Mode-IPD-下拉输入"><a href="#GPIO-Mode-IPD-下拉输入" class="headerlink" title="GPIO_Mode_IPD 下拉输入"></a>GPIO_Mode_IPD 下拉输入</h4><p>很好理解，接地，在空闲状态下是低电平。</p>
+<h4 id="GPIO-Mode-IPU-上拉输入"><a href="#GPIO-Mode-IPU-上拉输入" class="headerlink" title="GPIO_Mode_IPU 上拉输入"></a>GPIO_Mode_IPU 上拉输入</h4><p>接VCC，空闲时为高电平，比如在配置UART的RX引脚时就可以设置为上拉输入。</p>
+<h4 id="GPIO-Mode-Out-OD-开漏输出"><a href="#GPIO-Mode-Out-OD-开漏输出" class="headerlink" title="GPIO_Mode_Out_OD 开漏输出"></a>GPIO_Mode_Out_OD 开漏输出</h4><ul>
+<li><strong>结构</strong>：开漏输出由一个<strong>MOSFET（场效应管）</strong>构成，其漏极（Drain）作为输出引脚，源极（Source）接地。</li>
+<li>工作原理：<ul>
+<li>当MOSFET导通时，输出引脚被拉低（低电平，0V）。</li>
+<li>当MOSFET截止时，输出引脚处于<strong>高阻态</strong>（无电流输出），需要通过外部上拉电阻将电平拉高（高电平，如3.3V或5V）。</li>
+</ul>
+</li>
+</ul>
+<p>不同于推挽输出可以主动输出高、低电平，他只能主动输出低电平。</p>
+<h4 id="GPIO-Mode-Out-PP-推挽输出"><a href="#GPIO-Mode-Out-PP-推挽输出" class="headerlink" title="GPIO_Mode_Out_PP 推挽输出"></a>GPIO_Mode_Out_PP 推挽输出</h4><ul>
+<li><strong>信号来源</strong>：引脚信号直接来自 GPIO 外设（即由软件控制）。</li>
+<li>工作原理：<ul>
+<li>输出高电平时，上拉 MOS 管导通，引脚输出高电平（VDD）。</li>
+<li>输出低电平时，下拉 MOS 管导通，引脚输出低电平（GND）。</li>
+</ul>
+</li>
+<li>特点：<ul>
+<li>可以主动驱动高电平和低电平。</li>
+<li>输出能力强，适合驱动负载（如 LED、继电器等）。</li>
+<li>不能同时输出高电平和低电平，因此不适合直接连接两个输出引脚。</li>
+</ul>
+</li>
+<li>应用场景：<ul>
+<li>驱动外部设备（如 LED、蜂鸣器等）。</li>
+<li>作为普通数字信号输出。</li>
+</ul>
+</li>
+</ul>
+<h4 id="GPIO-Mode-AF-OD-复用开漏输出"><a href="#GPIO-Mode-AF-OD-复用开漏输出" class="headerlink" title="GPIO_Mode_AF_OD 复用开漏输出"></a>GPIO_Mode_AF_OD 复用开漏输出</h4><p>复用的意思是芯片内置的某个模块比如I2C的SCL和SDA接口接在了某个GPIO的引脚上。重映射是指通过配置寄存器或硬件机制，将某些外设功能或引脚重新分配到其他物理引脚上的功能。</p>
+<h4 id="GPIO-Mode-AF-PP-复用推挽输出"><a href="#GPIO-Mode-AF-PP-复用推挽输出" class="headerlink" title="GPIO_Mode_AF_PP 复用推挽输出"></a>GPIO_Mode_AF_PP 复用推挽输出</h4><ul>
+<li><strong>信号来源</strong>：引脚信号来自外设（如 USART、SPI、I2C 等），而不是直接来自 GPIO 外设。</li>
+<li>工作原理：<ul>
+<li>与推挽输出类似，上拉和下拉 MOS 管交替导通，但信号由外设控制。</li>
+<li>输出高电平时，上拉 MOS 管导通，引脚输出高电平（VDD）。</li>
+<li>输出低电平时，下拉 MOS 管导通，引脚输出低电平（GND）。</li>
+</ul>
+</li>
+<li>特点：<ul>
+<li>信号由外设控制，软件无法直接控制引脚状态。</li>
+<li>输出能力强，适合驱动负载。</li>
+<li>用于外设的专用功能。</li>
+</ul>
+</li>
+<li>应用场景：<ul>
+<li>外设通信（如 USART 的 TX 引脚、SPI 的 MOSI 引脚等）。</li>
+<li>需要外设控制信号输出的场景。</li>
+</ul>
+</li>
+</ul>
+<p>STM32F103ZET6芯片为144脚芯片，包括7个通用目的的输入&#x2F;输出口（GPIO）组，分别为GPIOA、GPIOB、GPIOC、GPIOD、GPIOE、GPIOF、GPIOG，同时每组GPIO口组有16个GPIO口。通常简略称为PAx、PBx、PCx、PDx、PEx、PFx、PGx，其中x为0-15。</p>
+<h2 id="寄存器（register）"><a href="#寄存器（register）" class="headerlink" title="寄存器（register）"></a>寄存器（register）</h2><p>有限存贮容量的高速存贮部件，它们可用来暂存<strong>指令</strong>、<strong>数据</strong>和<strong>地址</strong>等。</p>
+<p>比如，引脚的高低电平数据（1或0）就放在不同的寄存器里，通过地址，可以访问到不同的寄存器。指令、地址寄存器与数据寄存器类似，用来保存当前正在执行的一条指令和CPU当前所访问的主存单元的地址。</p>
+<p>STM32的寄存器（如GPIO、定时器、中断控制器等）在断电后会丢失其状态，上电后寄存器的值是随机的（未定义的）。STM32的Flash闪存是非易失性存储器，断电后Flash中存储的代码和数据不会丢失。上电后，CPU会从Flash中读取代码并执行。在程序执行过程中，代码会对寄存器进行初始化。</p>
+<p>当我们使用寄存器的方式点亮LED灯时，需要进行的操作：</p>
+<ul>
+<li><strong>使能GPIO时钟</strong></li>
+<li><strong>配置GPIO模式</strong></li>
+<li><strong>控制GPIO输出</strong></li>
+</ul>
+<p>AHB时钟通常直接由系统时钟（SYSCLK）提供。用于连接高性能外设，如CPU、DMA、SRAM、FLASH等。</p>
+<p>APB1时钟由AHB时钟经过分频器（APB1预分频器）得到，TIM2、TIM3、TIM4（定时器）<br>USART2、USART3（串口）<br>I2C1、I2C2（I2C接口）<br>SPI2（SPI接口）<br>PWR（电源控制）<br>CAN（控制器局域网）</p>
+<p>APB2的时钟频率通常较高（最大频率与AHB时钟相同），GPIOA、GPIOB、GPIOC等（GPIO端口）<br>TIM1（定时器）<br>USART1（串口）<br>SPI1（SPI接口）<br>ADC1、ADC2（模数转换器）<br>EXTI（外部中断）</p>
+<h2 id="USART通信"><a href="#USART通信" class="headerlink" title="USART通信"></a>USART通信</h2><p>单工是指数据传输仅能沿一个方向，不能实现反方向传输，如校园广播。</p>
+<p>半双工是指数据传输可以沿着两个方向，但是需要分时进行，如对讲机。</p>
+<p>全双工是指数据可以同时进行双向传输，日常的打电话属于这种情形。</p>
+<p>同步通信要求通信双方共用同一时钟信号，在总线上保持统一的时序和周期完成信息传输。</p>
+<p>优点：可以实现高速率、大容量的数据传输，以及点对多点传输。缺点：要求发送时钟和接收</p>
+<p>时钟保持严格同步，收发双方时钟允许的误差较小，同时硬件复杂。</p>
+<p>异步通信不需要时钟信号，而是在数据信号中加入开始位和停止位等一些同步信号，以便</p>
+<p>使接收端能够正确地将每一个字符接收下来，某些通信中还需要双方约定传输速率。优点：没</p>
+<p>有时钟信号硬件简单，双方时钟可允许一定误差。缺点：通信速率较低，只适用点对点传输。</p>
+<p><strong>串口通信协议</strong>是指规定了数据包的内容，内容包含了起始位、主体数据、校验位及停止位，双</p>
+<p>方需要约定一致的数据包格式才能正常收发数据的有关规范。</p>
+<p>在串口通信中，常用的协议包括</p>
+<p>RS-232、RS-422 和 RS-485 等</p>
+<p>![uart](<a target="_blank" rel="noopener" href="https://image.jiajie.me/img/Embedded">https://image.jiajie.me/img/Embedded</a> system&#x2F;uart.png)</p>
+<p>波特率，比如9600表示1s发送9600位byte</p>
+<p>启动位固定为低电平，停止位固定为高电平</p>
+<p>串口的空闲状态是高电平</p>
+<p>硬件数据流控CTS、RTS（了解）</p>
+<p>设置不同的停止位（1、1.5、2）</p>
+<h2 id="时钟"><a href="#时钟" class="headerlink" title="时钟"></a>时钟</h2><h3 id="代码解释"><a href="#代码解释" class="headerlink" title="代码解释"></a>代码解释</h3><h4 id="typedef-的作用"><a href="#typedef-的作用" class="headerlink" title="typedef 的作用"></a><code>typedef</code> 的作用</h4><ul>
+<li><code>typedef</code> 是 C&#x2F;C++ 中的一个关键字，用于为已有的数据类型定义一个新的别名。</li>
+<li>通过 <code>typedef</code>，可以让代码更简洁、易读，或者方便后续修改数据类型。</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//在stdint.h中有如下定义</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="type">unsigned</span> <span class="type">short</span>     <span class="type">int</span> <span class="type">uint16_t</span>;</span><br><span class="line"><span class="comment">//在stm32f10x.h中有如下定义</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="type">uint16_t</span> u16;</span><br></pre></td></tr></table></figure>
+
+<p><code>#ifdef</code> 和 <code>#if</code> 是预处理指令，用于条件编译。它们的作用是根据条件决定是否编译某段代码。</p>
+<p>core_cm3.h函数中：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> SysTick             ((SysTick_Type *)       SysTick_BASE)</span></span><br></pre></td></tr></table></figure>
+
+<p>SysTick_Type是定义的时钟寄存器的结构体，</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> SysTick_BASE        (SCS_BASE +  0x0010)</span></span><br></pre></td></tr></table></figure>
+
+<p>SysTick_BASE指向时钟外设的物理地址</p>
+<h2 id="I2C协议"><a href="#I2C协议" class="headerlink" title="I2C协议"></a>I2C协议</h2><h3 id="软件模拟"><a href="#软件模拟" class="headerlink" title="软件模拟"></a>软件模拟</h3><p>主要使用I2C一主多从的模式（也有多主多从模式，多主机仲裁），同步半双工，两根通信线：SCL、SDA，带数据应答，从机权力较小只能被动读取时钟线，并且不能主动发起对数据线的控制。</p>
+<ul>
+<li>SCL和SDA都设置为开漏输出模式，并接了上拉电阻（阻值一般4.7kΩ左右）</li>
+<li>SCL设置为开漏主要是因为有多主机的模式，若没有也可以设置为推挽输出</li>
+</ul>
+<p>![i2c](<a target="_blank" rel="noopener" href="https://image.jiajie.me/img/Embedded">https://image.jiajie.me/img/Embedded</a> system&#x2F;i2c.png)</p>
+<p> <strong>时序控制（时序是怎么定义的）：</strong></p>
+<p>起始条件：SCL在高电平期间，SDA从高电平到低电平的变化（下降沿）</p>
+<p>![start](<a target="_blank" rel="noopener" href="https://image.jiajie.me/img/Embedded">https://image.jiajie.me/img/Embedded</a> system&#x2F;start.png)</p>
+<p>终止条件：SCL在高电平时，SDA上升沿</p>
+<p>![end](<a target="_blank" rel="noopener" href="https://image.jiajie.me/img/Embedded">https://image.jiajie.me/img/Embedded</a> system&#x2F;end.png)</p>
+<p><strong>发送数据：</strong>主机在SCL低电平时，将数据加载到SDA上（高低电平），加载完毕后恢复SCL高电平，方便从机在上升沿获取SDA的状态即数据。这样即发送一位数据，重复八次即发送一个字节。</p>
+<p><strong>接收数据：</strong>模式与发送数据一样，由从机进行数据加载，主机在SCL高电平时读取数据。SCL高电平时不允许SDA状态发生变化。主机在设置为接收模式时，需要释放对SDA的控制。</p>
+<p><strong>应答设置：</strong>发送方发送八位数数据（一个字节）后，释放控制权，切换为读取，由接收方收到数据后发送SDA低电平表示收到数据。</p>
+<p><strong>设备地址</strong>：每种芯片出厂时都会被分配七位数的地址，比如MPU6050是1101000，若相同则可以改变最后的几位的高低电平，模块上最后几位可以通过接线控制高低电平，后面一位为读写位，最后一位为应答位。</p>
+<p>注意<strong>⚠️</strong>：示波器中左边的波形时间上早于右边的波形</p>
+<p>发送数据的流程大概为：</p>
+<p>激活起始条件，紧跟7位地址和1位读写位，读写位为0表示主机要进行写操作，1表示主机要接收特定从机的数据。而后是从机的一位应答位。当主机切换为读模式时，返回从机当前地址指针指向的地址的值（<strong>当前地址读</strong>），但是可以通过在读取地址前设置指定地址写来读取想要的地址（<strong>指定地址读</strong>）</p>
+<h3 id="硬件实现"><a href="#硬件实现" class="headerlink" title="硬件实现"></a>硬件实现</h3><p>STM32芯片内部有硬件直接实现应答、收发等功能。</p>
+<p> 有7位地址（起始+7位从机地址+应答+数据1+应答+…这是I2C的规定，后面的数据可以由厂商自己定义，比如mpu6050是数据位首先是寄存器的地址，再是从指定寄存器地址开始写入数据）和10位地址（起始位后两个字节都是寻址11110标志位+两位地址+1位读写位+后一字节地址）两种模式，主要使用7位</p>
+<p>数据寄存器（DR）</p>
+<p>状态寄存器（SR）：EV5（读：SR1向DR写入数据清除）、EV6、EV7</p>
+<p>移位寄存器（SR1）</p>
+<p>由数据寄存器发送数据给移位寄存器，再由移位寄存器发送数据。</p>
+<p>流程：</p>
+<p>1、开启时钟，既要开启I2C的硬件时钟，也要开启对应GPIO的时钟</p>
+<p>2、设置引脚模式，为复用开漏，引脚控制交给硬件I2C。</p>
+<p>3、初始化I2C，当高于100khz时会有高低电平的占空比的设置，由于上升比较缓慢，所以需要将低电平的时间设置的长一些</p>
+<p>4、I2C_Cmd()启用I2C</p>
+<p>5、写入起始位，并调用函数读取状态寄存器的事件状态</p>
+<p>6、叫唤从机，并设置为发送模式 ，通过EV6事件判断从机是否应答</p>
+<p>7、发送寄存器地址和数据，并且分别检查状态</p>
+<p>8、最后一个字节发送后，需要检查EV8_2</p>
+<p>如果是接收的话，就需要先设置为发送模式，并且指定接收寄存器地址再设置为接收模式，此外还需要设置应答。</p>
+<p>在接收状态时，若一直没有出现想要的结果就会程序卡死，因此设置退出，指定数进行递减，到0函数异常退出</p>
+<h3 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h3><p>由于开漏输出的弱上拉，导致通信频率受到上拉波形的限制，主流的最大为400khz</p>
+<h2 id="SPI通信"><a href="#SPI通信" class="headerlink" title="SPI通信"></a>SPI通信</h2><p>全双工的同步串行通信协议，仅支持一主多从</p>
+<p>SPI通信使用以下4根信号线：</p>
+<ol>
+<li><strong>MOSI（Master Out Slave In）</strong>：主设备发送数据，从设备接收数据。</li>
+<li><strong>MISO（Master In Slave Out）</strong>：从设备发送数据，主设备接收数据。</li>
+<li><strong>SCLK（Serial Clock）</strong>：主设备提供的时钟信号，用于同步数据传输。</li>
+<li><strong>SS&#x2F;CS（Slave Select&#x2F;Chip Select）</strong>：主设备用于选择从设备的信号（低电平有效）。</li>
+</ol>
+<p>![spi](<a target="_blank" rel="noopener" href="https://image.jiajie.me/img/Embedded">https://image.jiajie.me/img/Embedded</a> system&#x2F;spi.png)</p>
+<p>为避免多MISO高电平在冲突，SPI规定只有在ss选中时才允许该外设MISO设置为高，其他状态为高阻态（即为断开状态）</p>
+<p>移位寄存器</p>
+<p>波特率发生器（时钟）</p>
+<p>![](<a target="_blank" rel="noopener" href="https://image.jiajie.me/img/Embedded">https://image.jiajie.me/img/Embedded</a> system&#x2F;spi2.png)</p>
+<p>在每一个上升时钟沿进行移位输出，主机的输出到MOSI上，从机输出到MISO上。</p>
+<p>在下降沿进行移位输入，主机的数据输入到从机的移位寄存器的低位，从机的数据输入到主机的移位寄存器的低位。</p>
+<p>当我们不需要一方的数据时，不需要方发送0x00或者0xFF。</p>
+<p>起始条件为：ss从高电平切换到低电平</p>
+<p>终止条件：ss从低电平切换到高电平</p>
+<p>通过CPOL和CPHA的0或1两种状态设置四种模式，CPOL不同状态区别在于SCl的电平取反，CPHA不同状态区别在于数据移入移出的时机，，我们主要掌握模式0，即SCK第一个边沿移入数据，第二个边沿移出数据。</p>
+<p>第一个字节为指令码（芯片数据手册会有具体说明）比如是要读数据还是写数据，后面为数据</p>
+<p>时钟：对于stm32f1，SPI1使用APB2的时钟（72MHz），但需要进行（2、4、8、16、32、64、128、256）分频，</p>
+<p>写程序时需要重点关注两个标志位：发送缓冲器空闲标志位（TXE）和接收缓冲器非空标志位（RXNE）</p>
+<p>代码流程：</p>
+<p>1、开启SPI和GPIO时钟</p>
+<p>2、配置对应的GPIO口，SS的GPIO设置为推挽输出，SCL和MOSI配置为复用推挽输出，MISO配置为上拉输入。</p>
+<p>3、通过结构体对SPI初始化</p>
+<p>4、通过SPI_Cmd()函数使能SPI</p>
+<p>5、设置默认给ss输出高电平，即默认不选中从机</p>
+<p>6、查看TXE标志位是否为1，为1时发送数据</p>
+<p>7、检查RXNE标志位是否为1，为1时接收保存数据</p>
+<h2 id="传感器"><a href="#传感器" class="headerlink" title="传感器"></a>传感器</h2><h3 id="姿态传感器"><a href="#姿态传感器" class="headerlink" title="姿态传感器"></a>姿态传感器</h3><p>有六轴（加速度、陀螺仪的x、y、z）、九轴（+磁力计的x、y、z）、十轴（+气压计测高度）。</p>
+<p>融合数据用于确定姿态的欧拉角（俯仰、偏航、横滚）。</p>
+<p>根据加速度计的加速度值，可以测量出静态时物体的姿态。</p>
+<p>陀螺仪是可以直接测量物体运动的角度，但是<strong>MPU6050</strong>的陀螺仪只能测量角速度，但是可以通过对角速度进行积分得到角度，由于噪声（尤其是静止时）导致角度会发生偏移。MPU6050还内置了温度传感器，但它只支持I2C通信。</p>
+<p>在与MPU6050通信时，需要先写入唤醒模块，解除睡眠模式，使用I2C通信进行读时需要先起始条件（叫mpu6050），再使用写模式的指定某个寄存器，然后再重新起始</p>
+<h3 id="存储外设"><a href="#存储外设" class="headerlink" title="存储外设"></a>存储外设</h3><p>W25Q64存储8MB的数据，并且掉电不丢失，存储介质是Flash闪存，像我们电脑的硬盘、U盘都属于flash闪存，（SRAM、DRAM属于易失性存储器），原理图中引脚上方一条横线表示低电平有效。</p>
+<p>芯片内划分block、sector（1个block16个sector）和page（1个sector16个page，256字节）</p>
+<p>芯片写入数据只能由1改写为0，不能0改写为1，所以要覆盖原先的内容时需要先进行擦除，只能按sector擦除，且连续写入时一次最多写入256字节，多了会覆盖前面（由于页缓存区的缘故），写入操作结束后，芯片进入忙状态，不进行新的读写</p>
+<h3 id="Buck电路"><a href="#Buck电路" class="headerlink" title="Buck电路"></a>Buck电路</h3><p>![buck](<a target="_blank" rel="noopener" href="https://image.jiajie.me/img/Embedded">https://image.jiajie.me/img/Embedded</a> system&#x2F;buck.png)</p>
+<p>核心器件：开关管（S）、电感（L）、电容（C）、二极管（D）</p>
+<p>开关管：可以导通和关断电流，常见的开关管有三极管、MOSFET、IGBT等<br>电感：可以将电能转换成磁能储存起来，也能将磁能转换为电能再次释放<br>（1）电感在进行储能和释能转换时，电感的正负极会发生反向<br>（2）流经电感的电流不能突变，只能逐步变大或变小<br>电容：具备存放电的功能，电容器两端电压高于外部电路电压时放电，反之充电，充放电不会发生正负极的反向<br>二极管：具有正负极特性，电流只能单向流过，只有正极与正极相接才可流过电流，否则无法流过。</p>
+<p>注：D也可以是MOS管，MOS的压降损耗比二极管要小，二极管D也可以是其他快恢复或者肖特基二极管，导通压降更小的，损耗也小。Q和D是是一个同步整流，Q开D关、或者Q关D开。</p>
+<h3 id="boost电路"><a href="#boost电路" class="headerlink" title="boost电路"></a>boost电路</h3><p>![boost](<a target="_blank" rel="noopener" href="https://image.jiajie.me/img/Embedded">https://image.jiajie.me/img/Embedded</a> system&#x2F;boost.png)</p>
+<h2 id="ADC、DAC"><a href="#ADC、DAC" class="headerlink" title="ADC、DAC"></a>ADC、DAC</h2><p><strong>ADC</strong> 是 <strong>Analog-to-Digital Converter</strong>（模数转换器）的缩写，它是将模拟信号转换为数字信号的关键硬件模块。</p>
+<p>![ADC](<a target="_blank" rel="noopener" href="https://image.jiajie.me/img/Embedded">https://image.jiajie.me/img/Embedded</a> system&#x2F;ADC.png)</p>
+<p><strong>基本原理</strong></p>
+<ul>
+<li><strong>模拟信号</strong>：连续变化的信号（如电压、电流）。</li>
+<li><strong>数字信号</strong>：离散的信号（如二进制数值）。</li>
+<li>ADC 通过采样和量化，将模拟信号转换为数字信号。</li>
+</ul>
+<p>stm32F1的ADC采用12位逐次逼近型ADC，1us转换时间（最快1MHz），输入电压范围：0-3.3，转换范围：0-4095。</p>
+<p>规则通道：可选多个通道同时进行ADC转换，但需要配合DMA使用，防止数据被覆盖</p>
+<p>注入通道：可直接使用四个同时进行ADC转换</p>
+<p>模式：</p>
+<p>1、单次转换，非扫描模式</p>
+<p>2、单次转换，扫描模式（需要用到DMA）</p>
+<p>3、连续转换，扫描模式</p>
+<p>数据对齐：包括左对齐和右对齐两种，可以降低分辨率，比如将12位的分辨率变为8位</p>
+<p>DAC为数字信号转换为模拟信号，主要应用于波形发生器、音频解码芯片（比如使用PWM控制电机、呼吸灯就可以理解为DAC）</p>
+<h3 id="静态局部变量"><a href="#静态局部变量" class="headerlink" title="静态局部变量"></a><strong>静态局部变量</strong></h3><h4 id="存储位置："><a href="#存储位置：" class="headerlink" title="存储位置："></a>存储位置：</h4><ul>
+<li>如果静态局部变量被初始化，则存储在 <code>.data</code> 段（已初始化数据段）。</li>
+<li>如果未初始化，则存储在 <code>.bss</code> 段（未初始化数据段）。</li>
+</ul>
+<h3 id="1-data-段"><a href="#1-data-段" class="headerlink" title="1. .data 段"></a>1. <strong>.data 段</strong></h3><h4 id="定义："><a href="#定义：" class="headerlink" title="定义："></a>定义：</h4><ul>
+<li><code>.data</code> 段用于存储<strong>已初始化</strong>的全局变量和静态变量。</li>
+<li>这些变量在程序编译时被明确赋予了初始值。</li>
+</ul>
+<h4 id="特点："><a href="#特点：" class="headerlink" title="特点："></a>特点：</h4><ul>
+<li>存储在 RAM 中。</li>
+<li>初始值存储在 Flash&#x2F;ROM 中，程序启动时会被复制到 RAM。</li>
+<li>占用 Flash&#x2F;ROM 和 RAM 空间。</li>
+</ul>
+<h3 id="2-bss-段"><a href="#2-bss-段" class="headerlink" title="2. .bss 段"></a>2. <strong>.bss 段</strong></h3><h4 id="定义：-1"><a href="#定义：-1" class="headerlink" title="定义："></a>定义：</h4><ul>
+<li><code>.bss</code> 段用于存储<strong>未初始化</strong>的全局变量和静态变量。</li>
+<li>这些变量在程序编译时没有初始值。</li>
+</ul>
+<h4 id="特点：-1"><a href="#特点：-1" class="headerlink" title="特点："></a>特点：</h4><ul>
+<li>存储在 RAM 中。</li>
+<li>不占用 Flash&#x2F;ROM 空间（因为没有初始值）。</li>
+<li>程序启动时，<code>.bss</code> 段会被清零。</li>
+</ul>
+</article><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E5%B5%8C%E5%85%A5%E5%BC%8F/">嵌入式</a></div><div class="post_share"><div class="social-share" data-image="https://image.jiajie.me/img/Embedded system/stm32f103.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2025/02/21/dji-topic/"><img class="next-cover" src="https://image.jiajie.me/img/dji/dji.png" onerror="onerror=null;src='/assests/404.png'" alt="cover of next post"><div class="pagination-info"><div class="label">Next Post</div><div class="next_info">dji-topic</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>Related Articles</span></div><div class="relatedPosts-list"><div><a href="/2024/02/28/RC522/" title="RC522"><img class="cover" src="https://image.jiajie.me/img/esp_rc.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-02-28</div><div class="title">RC522</div></div></a></div><div><a href="/2024/04/08/stm32-LCD/" title="STM32-LCD"><img class="cover" src="https://image.jiajie.me/img/LCD/cover.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-04-08</div><div class="title">STM32-LCD</div></div></a></div><div><a href="/2024/04/07/stm32-remote/" title="STM32F10*系列单片机开发"><img class="cover" src="https://image.jiajie.me/img/remote/remote_cover.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-04-07</div><div class="title">STM32F10*系列单片机开发</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://image.jiajie.me/img/image0.jpeg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">WildIronJay</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">18</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">10</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">5</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/huangjj979"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/huangjj979" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:3201223340@qq.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content"><center><b>Welcome to HJJ's Blog<br><b>--- 网站域名 ---<br><a target="_blank" rel="noopener" href="https://www.jiajie.me" title="网站域名" class="anno_content"><font color="#5ea6e5">jiajie.me</font></a><br>--- 🍧ChatGPT🍧 ---<br><a target="_blank" rel="noopener" href="http://120.26.208.83:3000" title="自己搭建的chatgpt" class="anno_content"><font color="#5ea6e5">ChatGPT</font></a></center></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Catalog</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#GPIO%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86"><span class="toc-number">1.</span> <span class="toc-text">GPIO工作原理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%AB%E7%A7%8D%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA%E6%A8%A1%E5%BC%8F%EF%BC%9A"><span class="toc-number">1.1.</span> <span class="toc-text">八种输入输出模式：</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#GPIO-Mode-IN-FLOATING-%E6%B5%AE%E7%A9%BA%E8%BE%93%E5%85%A5"><span class="toc-number">1.1.1.</span> <span class="toc-text">GPIO_Mode_IN_FLOATING 浮空输入</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#GPIO-Mode-IPD-%E4%B8%8B%E6%8B%89%E8%BE%93%E5%85%A5"><span class="toc-number">1.1.2.</span> <span class="toc-text">GPIO_Mode_IPD 下拉输入</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#GPIO-Mode-IPU-%E4%B8%8A%E6%8B%89%E8%BE%93%E5%85%A5"><span class="toc-number">1.1.3.</span> <span class="toc-text">GPIO_Mode_IPU 上拉输入</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#GPIO-Mode-Out-OD-%E5%BC%80%E6%BC%8F%E8%BE%93%E5%87%BA"><span class="toc-number">1.1.4.</span> <span class="toc-text">GPIO_Mode_Out_OD 开漏输出</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#GPIO-Mode-Out-PP-%E6%8E%A8%E6%8C%BD%E8%BE%93%E5%87%BA"><span class="toc-number">1.1.5.</span> <span class="toc-text">GPIO_Mode_Out_PP 推挽输出</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#GPIO-Mode-AF-OD-%E5%A4%8D%E7%94%A8%E5%BC%80%E6%BC%8F%E8%BE%93%E5%87%BA"><span class="toc-number">1.1.6.</span> <span class="toc-text">GPIO_Mode_AF_OD 复用开漏输出</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#GPIO-Mode-AF-PP-%E5%A4%8D%E7%94%A8%E6%8E%A8%E6%8C%BD%E8%BE%93%E5%87%BA"><span class="toc-number">1.1.7.</span> <span class="toc-text">GPIO_Mode_AF_PP 复用推挽输出</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AF%84%E5%AD%98%E5%99%A8%EF%BC%88register%EF%BC%89"><span class="toc-number">2.</span> <span class="toc-text">寄存器（register）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#USART%E9%80%9A%E4%BF%A1"><span class="toc-number">3.</span> <span class="toc-text">USART通信</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%97%B6%E9%92%9F"><span class="toc-number">4.</span> <span class="toc-text">时钟</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E8%A7%A3%E9%87%8A"><span class="toc-number">4.1.</span> <span class="toc-text">代码解释</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#typedef-%E7%9A%84%E4%BD%9C%E7%94%A8"><span class="toc-number">4.1.1.</span> <span class="toc-text">typedef 的作用</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#I2C%E5%8D%8F%E8%AE%AE"><span class="toc-number">5.</span> <span class="toc-text">I2C协议</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BD%AF%E4%BB%B6%E6%A8%A1%E6%8B%9F"><span class="toc-number">5.1.</span> <span class="toc-text">软件模拟</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A1%AC%E4%BB%B6%E5%AE%9E%E7%8E%B0"><span class="toc-number">5.2.</span> <span class="toc-text">硬件实现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BC%BA%E7%82%B9"><span class="toc-number">5.3.</span> <span class="toc-text">缺点</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SPI%E9%80%9A%E4%BF%A1"><span class="toc-number">6.</span> <span class="toc-text">SPI通信</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BC%A0%E6%84%9F%E5%99%A8"><span class="toc-number">7.</span> <span class="toc-text">传感器</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A7%BF%E6%80%81%E4%BC%A0%E6%84%9F%E5%99%A8"><span class="toc-number">7.1.</span> <span class="toc-text">姿态传感器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%98%E5%82%A8%E5%A4%96%E8%AE%BE"><span class="toc-number">7.2.</span> <span class="toc-text">存储外设</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Buck%E7%94%B5%E8%B7%AF"><span class="toc-number">7.3.</span> <span class="toc-text">Buck电路</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#boost%E7%94%B5%E8%B7%AF"><span class="toc-number">7.4.</span> <span class="toc-text">boost电路</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ADC%E3%80%81DAC"><span class="toc-number">8.</span> <span class="toc-text">ADC、DAC</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%9D%99%E6%80%81%E5%B1%80%E9%83%A8%E5%8F%98%E9%87%8F"><span class="toc-number">8.1.</span> <span class="toc-text">静态局部变量</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AD%98%E5%82%A8%E4%BD%8D%E7%BD%AE%EF%BC%9A"><span class="toc-number">8.1.1.</span> <span class="toc-text">存储位置：</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-data-%E6%AE%B5"><span class="toc-number">8.2.</span> <span class="toc-text">1. .data 段</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%9A%E4%B9%89%EF%BC%9A"><span class="toc-number">8.2.1.</span> <span class="toc-text">定义：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%89%B9%E7%82%B9%EF%BC%9A"><span class="toc-number">8.2.2.</span> <span class="toc-text">特点：</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-bss-%E6%AE%B5"><span class="toc-number">8.3.</span> <span class="toc-text">2. .bss 段</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%9A%E4%B9%89%EF%BC%9A-1"><span class="toc-number">8.3.1.</span> <span class="toc-text">定义：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%89%B9%E7%82%B9%EF%BC%9A-1"><span class="toc-number">8.3.2.</span> <span class="toc-text">特点：</span></a></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Post</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2025/03/19/stm32-basics/" title="stm32 基础"><img src="https://image.jiajie.me/img/Embedded system/stm32f103.png" onerror="this.onerror=null;this.src='/assests/404.png'" alt="stm32 基础"/></a><div class="content"><a class="title" href="/2025/03/19/stm32-basics/" title="stm32 基础">stm32 基础</a><time datetime="2025-03-19T09:34:15.000Z" title="Created 2025-03-19 17:34:15">2025-03-19</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/02/21/dji-topic/" title="dji-topic"><img src="https://image.jiajie.me/img/dji/dji.png" onerror="this.onerror=null;this.src='/assests/404.png'" alt="dji-topic"/></a><div class="content"><a class="title" href="/2025/02/21/dji-topic/" title="dji-topic">dji-topic</a><time datetime="2025-02-21T12:40:17.000Z" title="Created 2025-02-21 20:40:17">2025-02-21</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2023 - 2025 By WildIronJay</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Switch Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between single-column and double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><button id="chat_btn" type="button" title="Chat"><i class="fas fa-sms"></i></button><button id="go-up" type="button" title="Back To Top"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><div class="js-pjax"></div><script defer src="/js/cursor.js"></script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="true"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><!-- hexo injector body_end start --><script data-pjax>
+  function butterfly_clock_anzhiyu_injector_config(){
+    var parent_div_git = document.getElementsByClassName('sticky_layout')[0];
+    var item_html = '<div class="card-widget card-clock"><div class="card-glass"><div class="card-background"><div class="card-content"><div id="hexo_electric_clock"><img class="entered loading" id="card-clock-loading" src="https://cdn.cbd.int/hexo-butterfly-clock-anzhiyu/lib/loading.gif" style="height: 120px; width: 100%;" data-ll-status="loading"/></div></div></div></div></div>';
+    console.log('已挂载butterfly_clock_anzhiyu')
+    if(parent_div_git) {
+      parent_div_git.insertAdjacentHTML("afterbegin",item_html)
+    }
+  }
+  var elist = 'null'.split(',');
+  var cpage = location.pathname;
+  var epage = '/';
+  var qweather_key = 'c948a17d32c44033a149cbce4f29b58d';
+  var gaud_map_key = 'f2d32668a84eb7d9adb95c257d70fb30';
+  var baidu_ak_key = 'undefined';
+  var flag = 0;
+  var clock_rectangle = '113.34532,23.15624';
+  var clock_default_rectangle_enable = 'false';
+
+  for (var i=0;i<elist.length;i++){
+    if (cpage.includes(elist[i])){
+      flag++;
+    }
+  }
+
+  if ((epage ==='all')&&(flag == 0)){
+    butterfly_clock_anzhiyu_injector_config();
+  }
+  else if (epage === cpage){
+    butterfly_clock_anzhiyu_injector_config();
+  }
+  </script><script src="https://widget.qweather.net/simple/static/js/he-simple-common.js?v=2.0"></script><script data-pjax src="https://cdn.cbd.int/hexo-butterfly-clock-anzhiyu/lib/clock.min.js"></script><!-- hexo injector body_end end --><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"left","width":150,"height":300},"mobile":{"show":true},"log":false});</script></body></html>

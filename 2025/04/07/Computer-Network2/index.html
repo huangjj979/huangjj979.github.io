@@ -1,0 +1,305 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>Computer_Network2 | WildIronJay</title><meta name="author" content="WildIronJay"><meta name="copyright" content="WildIronJay"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="计算机网络TCP __源端口号__（Source Port，16位）表示发送方的端口号，用于标识发送数据的应用程序。 __目的端口号__（Destination Port，16位）表示接收方的端口号，用于标识接收数据的应用程序。 __序列号__（Sequence Number，32位）序列号用于标识该 TCP 报文段中第一个字节在整个字节流中的相对位置。  http和https的区别： HTTP">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Computer_Network2">
+<meta property="og:url" content="https://myblog-mu-ashen.vercel.app/2025/04/07/Computer-Network2/index.html">
+<meta property="og:site_name" content="WildIronJay">
+<meta property="og:description" content="计算机网络TCP __源端口号__（Source Port，16位）表示发送方的端口号，用于标识发送数据的应用程序。 __目的端口号__（Destination Port，16位）表示接收方的端口号，用于标识接收数据的应用程序。 __序列号__（Sequence Number，32位）序列号用于标识该 TCP 报文段中第一个字节在整个字节流中的相对位置。  http和https的区别： HTTP">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://image.jiajie.me/img/network.jpg">
+<meta property="article:published_time" content="2025-04-07T08:48:36.000Z">
+<meta property="article:modified_time" content="2025-04-07T08:50:40.428Z">
+<meta property="article:author" content="WildIronJay">
+<meta property="article:tag" content="network">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://image.jiajie.me/img/network.jpg"><link rel="shortcut icon" href="https://image.jiajie.me/img/image0.jpeg"><link rel="canonical" href="https://myblog-mu-ashen.vercel.app/2025/04/07/Computer-Network2/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//fonts.googleapis.com" crossorigin=""/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Titillium+Web&amp;display=swap" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: 'Just',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Computer_Network2',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: undefined,
+  isToc: true,
+  postUpdate: '2025-04-07 16:50:40'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><link rel="stylesheet" href="/css/custom.css"><!-- hexo injector head_end start --><link rel="stylesheet" href="https://cdn.cbd.int/hexo-butterfly-clock-anzhiyu/lib/clock.min.css" /><!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://image.jiajie.me/img/image0.jpeg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">24</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">13</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">5</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-heartbeat"></i><span> 清单</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://image.jiajie.me/img/network.jpg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">WildIronJay</a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-heartbeat"></i><span> 清单</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Computer_Network2</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2025-04-07T08:48:36.000Z" title="Created 2025-04-07 16:48:36">2025-04-07</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2025-04-07T08:50:40.428Z" title="Updated 2025-04-07 16:50:40">2025-04-07</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Computer_Network2"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post View:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="计算机网络"><a href="#计算机网络" class="headerlink" title="计算机网络"></a>计算机网络</h2><h3 id="TCP"><a href="#TCP" class="headerlink" title="TCP"></a>TCP</h3><ul>
+<li>__源端口号__（Source Port，16位）表示发送方的端口号，用于标识发送数据的应用程序。</li>
+<li>__目的端口号__（Destination Port，16位）表示接收方的端口号，用于标识接收数据的应用程序。</li>
+<li>__序列号__（Sequence Number，32位）序列号用于标识该 TCP 报文段中第一个字节在整个字节流中的相对位置。</li>
+</ul>
+<p>http和https的区别：</p>
+<p><strong>HTTP</strong> 和 <strong>HTTPS</strong> 是两种常见的网络通信协议，它们的主要区别在于 <strong>安全性</strong> 和 <strong>数据传输方式</strong>。以下是它们的详细对比：</p>
+<p><strong>1. 基本概念</strong></p>
+<ul>
+<li><strong>HTTP（HyperText Transfer Protocol）</strong>：<ul>
+<li>一种用于传输超文本（如网页）的应用层协议。</li>
+<li>数据以明文形式传输，容易被窃听或篡改。</li>
+<li>默认端口：<code>80</code>。</li>
+</ul>
+</li>
+<li><strong>HTTPS（HyperText Transfer Protocol Secure）</strong>：<ul>
+<li>是 HTTP 的安全版本，基于 SSL&#x2F;TLS 协议对数据进行加密。</li>
+<li>数据传输过程中加密，防止窃听和篡改。</li>
+<li>默认端口：<code>443</code>。</li>
+</ul>
+</li>
+</ul>
+<h3 id="HTTPS-的加密机制"><a href="#HTTPS-的加密机制" class="headerlink" title="HTTPS 的加密机制"></a><strong>HTTPS 的加密机制</strong></h3><p>非对称加密，可以简单理解为服务端既有公钥又有私钥，通信前会将公钥发送给客户端，并且双方各给对方一个随机数用于生成后续的会话密钥，客户端使用公钥对随机数进行加密后传输给服务器只有服务端才能解开，双方生成预主密钥，双方使用客服端随机数、服务器随机数、<strong>预主密钥</strong>一起生成<strong>会话密钥</strong>，双方使用会话密钥进行加密通信。</p>
+<h4 id="步骤-1：客户端发起-HTTPS-请求"><a href="#步骤-1：客户端发起-HTTPS-请求" class="headerlink" title="步骤 1：客户端发起 HTTPS 请求"></a><strong>步骤 1：客户端发起 HTTPS 请求</strong></h4><ul>
+<li>客户端（如浏览器）向服务器发起 HTTPS 请求（例如访问 <code>https://example.com</code>）。</li>
+</ul>
+<h4 id="步骤-2：服务器返回-SSL-TLS-证书"><a href="#步骤-2：服务器返回-SSL-TLS-证书" class="headerlink" title="步骤 2：服务器返回 SSL&#x2F;TLS 证书"></a><strong>步骤 2：服务器返回 SSL&#x2F;TLS 证书</strong></h4><ul>
+<li>服务器将其 <strong>SSL&#x2F;TLS 证书</strong> 发送给客户端。</li>
+<li>证书包含以下信息：<ul>
+<li>服务器的公钥。</li>
+<li>证书的颁发机构（CA）。</li>
+<li>证书的有效期。</li>
+<li>服务器的域名（用于验证域名是否匹配）。</li>
+</ul>
+</li>
+</ul>
+<h4 id="步骤-3：客户端验证证书"><a href="#步骤-3：客户端验证证书" class="headerlink" title="步骤 3：客户端验证证书"></a><strong>步骤 3：客户端验证证书</strong></h4><ul>
+<li>客户端检查证书的合法性：<ol>
+<li>证书是否由受信任的证书颁发机构（CA）签发。</li>
+<li>证书是否在有效期内。</li>
+<li>证书中的域名是否与访问的域名匹配。</li>
+</ol>
+</li>
+<li>如果证书验证失败，客户端会显示警告（如 “此网站不安全”）。</li>
+</ul>
+<h4 id="步骤-4：客户端生成对称密钥"><a href="#步骤-4：客户端生成对称密钥" class="headerlink" title="步骤 4：客户端生成对称密钥"></a><strong>步骤 4：客户端生成对称密钥</strong></h4><ul>
+<li>客户端生成一个随机的 <strong>对称密钥</strong>（称为 <strong>会话密钥</strong>），用于加密实际传输的数据。</li>
+<li>使用服务器的 <strong>公钥</strong> 加密该对称密钥，然后发送给服务器。</li>
+</ul>
+<h4 id="步骤-5：服务器解密对称密钥"><a href="#步骤-5：服务器解密对称密钥" class="headerlink" title="步骤 5：服务器解密对称密钥"></a><strong>步骤 5：服务器解密对称密钥</strong></h4><ul>
+<li>服务器使用自己的 <strong>私钥</strong> 解密客户端发送的对称密钥。</li>
+</ul>
+<h4 id="步骤-6：建立加密通信"><a href="#步骤-6：建立加密通信" class="headerlink" title="步骤 6：建立加密通信"></a><strong>步骤 6：建立加密通信</strong></h4><ul>
+<li>客户端和服务器都拥有相同的对称密钥。</li>
+<li>双方使用该对称密钥加密和解密后续的通信数据。</li>
+</ul>
+<h3 id="HTTP状态码的含义？"><a href="#HTTP状态码的含义？" class="headerlink" title="HTTP状态码的含义？"></a>HTTP状态码的含义？</h3><p>100类状态码属于<strong>提示信息</strong>，是协议处理中的一种中间状态，实际用到的比较少。</p>
+<ul>
+<li>100(继续)：请求者应当继续提出请求。 服务器返回此代码表示已收到请求的第一部分，正在等待其余部分。</li>
+<li>101(切换协议）：请求者已要求服务器切换协议，服务器已确认并准备切换。</li>
+</ul>
+<p>200类状态码表示服务器<strong>成功</strong>处理了客户端的请求。</p>
+<ul>
+<li>200(成功）：表示服务器<strong>响应成功</strong>，也就是服务器找到了客户端请求的内容，并且将内容返回给客户端。</li>
+<li>204(已创建）：请求成功并且服务器创建了新的资源。</li>
+<li>206(部分内容）：服务器成功处理了部分GET请求。</li>
+</ul>
+<p>300类状态码表示客户端请求的资源发生了变动，需要客户端用新的 URL 重新发送请求获取资源，也就是<strong>重定向</strong>。</p>
+<ul>
+<li>301(永久移动）：代表永久性的重定向<strong>，值得注意的是，这种重定向跳转，从严格意义来讲不是服务器跳转，而是客户端跳转</strong>的。这个“跳”的动作是服务器是通过回传状态码301来下达给客户端的，让客户端完成跳转。</li>
+<li>302(临时移动）：代表<strong>临时跳转</strong>。例如：URL地址A可以向URL地址B上跳转，但这并不是永久性的，在经过一段时间后，URL地址A还可能向URL地址C上跳转。</li>
+<li>304(未修改）：服务器通过返回状态码304可以告诉客户端请求资源成功，但是这个资源不是由服务器提供返回给客户端的，而是客户端本地浏览器缓存中就有的这个资源，因为可以从缓存中获取这个资源，从而节省传输的开销。</li>
+</ul>
+<p>提示</p>
+<p>301 和 302 都会在响应头里使用字段 <code>Location</code>，指明后续要跳转的 URL，浏览器会自动重定向新的 URL。</p>
+<ul>
+<li>400类状态码表示客户端发送的<strong>报文有误</strong>，服务器无法处理。</li>
+<li>400(错误请求）：服务器不理解请求的语法。</li>
+<li>403(禁止）：代表请求的服务器资源<strong>权限不够</strong>，也就是没有权限去访问服务器的资源，或者请求的IP地址被封掉了。</li>
+<li>404(未找到）：代表服务器上<strong>没有该资源</strong>，或者说服务器找不到客户端请求的资源，是最常见的请求错误码。</li>
+</ul>
+<p>500类状态码表示客户端请求报文正确，但是<strong>服务器处理时内部发生了错误</strong>，属于服务器端的错误码。</p>
+<ul>
+<li>500(服务器内部错误）：代表<strong>程序错误</strong>，也就是说请求的网页程序本身报错了。在服务器端的网页程序出错。由于现在的浏览器都会对状态码500做一定的处理，所以在一般情况下会返回一个定制的错误页面。</li>
+<li>501(尚未实施）：服务器不具备完成请求的功能。 例如，服务器无法识别请求方法时可能会返回此代码。</li>
+<li>502(错误网关）：通常是服务器作为网关或代理时返回的错误码，表示服务器自身工作正常，访问后端服务器发生了错误。</li>
+<li>503(服务不可用）：表示服务器当前很忙，暂时无法响应客户端。。</li>
+<li>504(网关超时）：服务器作为网关或代理，但是没有及时从上游服务器收到请求。</li>
+<li>505(HTTP 版本不受支持）：服务器不支持请求中所用的 HTTP 协议版本。</li>
+</ul>
+<h3 id="HTTP的GET和POST方法区别？重要"><a href="#HTTP的GET和POST方法区别？重要" class="headerlink" title="HTTP的GET和POST方法区别？重要"></a>HTTP的GET和POST方法区别？重要</h3><ul>
+<li>GET一般用来从服务器上获取资源，POST一般用来更新服务器上的资源。</li>
+<li>GET是幂等的，即读取同一个资源总是得到相同的数据，而POST不是幂等的，因为每次请求对资源的改变并不是相同的。</li>
+<li>GET不会改变服务器上的资源，而POST会对服务器资源进行改变。</li>
+<li>GET请求的数据会附在URL之后，即将请求数据放置在HTTP报文的请求头中，以?分割URL和传输数据，参数之间以&amp;相连；而POST请求会把提交的数据则放置在是HTTP请求报文的请求体中。</li>
+<li>POST的安全性要比GET的安全性高，因为GET请求提交的数据将明文出现在URL上，而且POST请求参数则被包装到请求体中，相对更安全。</li>
+<li>从请求的大小看，GET请求的长度受限于浏览器或服务器对URL长度的限制，允许发送的数据量比较小，而POST请求则是没有大小限制的。</li>
+</ul>
+<h3 id="TCP的三次握手？"><a href="#TCP的三次握手？" class="headerlink" title="TCP的三次握手？"></a>TCP的三次握手？</h3><p><img src="https://pic.imgdb.cn/item/63e199104757feff33703bd8.jpg" alt="图片"></p>
+<p><strong>第一次握手</strong></p>
+<p>客户端请求建立连接，将首部的SYN标识位置为1，初始化序列号seq&#x3D;x，发送给服务器，并进入<strong>SYN_SENT</strong>状态，等待服务器确认。</p>
+<p><strong>第二次握手</strong></p>
+<p>服务器接收到SYN后，将首部的SYN和ACK标识位置为1，回复确认ack的值为客户端发送的序列号x+1，同时自己也要初始化一个seq&#x3D;y，ACK和SYN一起发送客户端，进入<strong>SYN_RECV</strong>状态。</p>
+<p><strong>第三次握手</strong></p>
+<p>客户端收到服务器的SYN和ACK包后，向服务器发送确认包ack，值为服务器的序列号y+1，并且自己的seq为x+1，此包发送完毕，客户端和服务器进入<strong>ESTABLISHED</strong>（TCP连接成功）状态。</p>
+<h3 id="TCP的四次挥手？"><a href="#TCP的四次挥手？" class="headerlink" title="TCP的四次挥手？"></a>TCP的四次挥手？</h3><p><img src="https://pic.imgdb.cn/item/63e19a374757feff33718597.jpg" alt="img"></p>
+<p><strong>第一次挥手</strong></p>
+<p>客户端发送释放报文，并停止发送数据，将首部的FIN标识位置为1，序列号seq&#x3D;u发送给服务器，值等于前面已经传送过来的数据的最后一个字节的序号加1，此时客户端进入<strong>FIN_WAIT_1</strong>状态。即便FIN报文不携带数据，也要消耗一个序列号。</p>
+<p><strong>第二次挥手</strong></p>
+<p>服务器在收到释放报文后，发送确认报文，ACK标识位置为1，ack值为客户端发送的序列号u+1，并带上自己的序列号v，然后服务器进入<strong>CLOSE_WAIT关闭等待</strong>状态。这时服务器TCP通知高级应用进程，客户端向服务器的连接释放了，进入半关闭状态，但是服务器如果向客户端发送数据，客户端仍然可以接收，这个状态要持续一段时间，也就是<strong>CLOSE_WAIT关闭等待</strong>持续的时间。</p>
+<p>客户端收到服务器的确认请求后，进入<strong>FIN_WAIT_2</strong>状态，等待服务器发送释放报文。</p>
+<p><strong>第三次挥手</strong></p>
+<p>服务器数据处理完毕后，向客户端发送释放连接报文，FIN标识位置为1，ack的值为客户端的序列号u+1，由于在半关闭状态，服务器很可能又发送一些数据，假定此时序列号为w，服务器进入<strong>LAST_ACK</strong>状态，等待客户端确认。</p>
+<p><strong>第四次挥手</strong></p>
+<p>客户端在收到服务器的释放连接报文后，会发送确认报文，ACK标识位置为1，ack值为服务器发送的序列号w+1，</p>
+<p>自己的序列号是u+1，然后客户端就进入<strong>TIME_WAIT</strong>状态。此时TCP连接还没有释放，必须经过两个MSL时间（一个MSL指的是报文段最长寿命），当客户端撤销TCB，才进入<strong>CLOSED</strong>状态。</p>
+<p>服务器只要收到客户端发送的确认请求，立即进入<strong>CLOSED</strong>状态。同时会撤销TCB，TCP连接至此结束。</p>
+<h3 id="OSI的7层网络模型？"><a href="#OSI的7层网络模型？" class="headerlink" title="OSI的7层网络模型？"></a>OSI的7层网络模型？</h3><p>分为应用层、表示层、会话层、运输层、网络层、链路层、物理层。</p>
+<ul>
+<li>应用层(数据)：确定进程之间<strong>通信的性质</strong>以及满足用户需要以及提供网络和用户应用，为应用程序提供服务，DNS，HTTP，HTTPS，DHCP，FTP，POP3(Post Office Protocol)、SMTP(Simple Mail Transfer Protocol)都是这层的协议。</li>
+<li>表示层(数据)：主要解决用户信息的<strong>语法表示</strong>问题，表示层提供各种<strong>用于应用层数据的编码和转换功能</strong>,确保一个系统的应用层发送的数据能被另一个系统的应用层识别，<strong>如数据转换，压缩和加密，解密</strong>。</li>
+<li>会话层(数据)：会话层就是负责<strong>建立、管理和终止表示层实体之间的通信会话</strong>。该层的通信由不同设备中的应用程序之间的服务请求和响应组成。 比如服务器验证用户登录就是在会话层。</li>
+<li>传输层(段)：实现网络不同主机上的用户进程之间的数据通信，可靠与不可靠的传输，传输层的错误检测，流量控制，拥塞控制。TCP UDP就这层。</li>
+<li>网络层(包)：本层通过<strong>IP寻址</strong>来建立两个节点之间的连接，为源端的运输层送来的分组，<strong>选择合适的路由和交换节点</strong>，正确无误地按照地址传送给目的端的运输层。IP就是这层。</li>
+<li>数据链路层(帧)：将上层数据封装成帧，用<strong>MAC</strong>地址访问媒介，并由错误检测和修正</li>
+<li>物理层(比特流)：设备之间比特流的传输，物理接口，电气特性(常用设备有(各种物理设备)集线器、中继器、调制解调器、网线、双绞线、同轴电缆。这些都是物理层的传输介质。)</li>
+</ul>
+<h3 id="TCP-IP的四层网络模型？"><a href="#TCP-IP的四层网络模型？" class="headerlink" title="#TCP&#x2F;IP的四层网络模型？"></a><a target="_blank" rel="noopener" href="http://www.csview.cn/network/summary.html#tcp-ip%E7%9A%84%E5%9B%9B%E5%B1%82%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B">#</a>TCP&#x2F;IP的四层网络模型？</h3><p>TCP四层模型是我们实践过程中发现比较合理的分层，虽然我们实际过程中都没有按OSI分为七层，但是OSI对我们实践过程分层有着指导性的意义。</p>
+<p><img src="https://pic.imgdb.cn/item/63ef20b3f144a01007340007.jpg" alt="img"></p>
+</article><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/network/">network</a></div><div class="post_share"><div class="social-share" data-image="https://image.jiajie.me/img/network.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2025/04/07/Interrupt/"><img class="prev-cover" src="https://image.jiajie.me/img/Embedded system/interrupt.png" onerror="onerror=null;src='/assests/404.png'" alt="cover of previous post"><div class="pagination-info"><div class="label">Previous Post</div><div class="prev_info">Interrupt 机制</div></div></a></div><div class="next-post pull-right"><a href="/2025/04/07/makefile/"><img class="next-cover" src="https://image.jiajie.me/img/program language/makefile.png" onerror="onerror=null;src='/assests/404.png'" alt="cover of next post"><div class="pagination-info"><div class="label">Next Post</div><div class="next_info">Makefile 基础</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>Related Articles</span></div><div class="relatedPosts-list"><div><a href="/2023/12/06/Computer_Network/" title="Computer Network Knowledge and Application"><img class="cover" src="https://image.jiajie.me/img/network.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-12-06</div><div class="title">Computer Network Knowledge and Application</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://image.jiajie.me/img/image0.jpeg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">WildIronJay</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">24</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">13</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">5</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/huangjj979"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/huangjj979" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:3201223340@qq.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content"><center><b>Welcome to HJJ's Blog<br><b>--- 网站域名 ---<br><a target="_blank" rel="noopener" href="https://www.jiajie.me" title="网站域名" class="anno_content"><font color="#5ea6e5">jiajie.me</font></a><br>--- 🍧ChatGPT🍧 ---<br><a target="_blank" rel="noopener" href="http://120.26.208.83:3000" title="自己搭建的chatgpt" class="anno_content"><font color="#5ea6e5">ChatGPT</font></a></center></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Catalog</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C"><span class="toc-number">1.</span> <span class="toc-text">计算机网络</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#TCP"><span class="toc-number">1.1.</span> <span class="toc-text">TCP</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#HTTPS-%E7%9A%84%E5%8A%A0%E5%AF%86%E6%9C%BA%E5%88%B6"><span class="toc-number">1.2.</span> <span class="toc-text">HTTPS 的加密机制</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%AD%A5%E9%AA%A4-1%EF%BC%9A%E5%AE%A2%E6%88%B7%E7%AB%AF%E5%8F%91%E8%B5%B7-HTTPS-%E8%AF%B7%E6%B1%82"><span class="toc-number">1.2.1.</span> <span class="toc-text">步骤 1：客户端发起 HTTPS 请求</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%AD%A5%E9%AA%A4-2%EF%BC%9A%E6%9C%8D%E5%8A%A1%E5%99%A8%E8%BF%94%E5%9B%9E-SSL-TLS-%E8%AF%81%E4%B9%A6"><span class="toc-number">1.2.2.</span> <span class="toc-text">步骤 2：服务器返回 SSL&#x2F;TLS 证书</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%AD%A5%E9%AA%A4-3%EF%BC%9A%E5%AE%A2%E6%88%B7%E7%AB%AF%E9%AA%8C%E8%AF%81%E8%AF%81%E4%B9%A6"><span class="toc-number">1.2.3.</span> <span class="toc-text">步骤 3：客户端验证证书</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%AD%A5%E9%AA%A4-4%EF%BC%9A%E5%AE%A2%E6%88%B7%E7%AB%AF%E7%94%9F%E6%88%90%E5%AF%B9%E7%A7%B0%E5%AF%86%E9%92%A5"><span class="toc-number">1.2.4.</span> <span class="toc-text">步骤 4：客户端生成对称密钥</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%AD%A5%E9%AA%A4-5%EF%BC%9A%E6%9C%8D%E5%8A%A1%E5%99%A8%E8%A7%A3%E5%AF%86%E5%AF%B9%E7%A7%B0%E5%AF%86%E9%92%A5"><span class="toc-number">1.2.5.</span> <span class="toc-text">步骤 5：服务器解密对称密钥</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%AD%A5%E9%AA%A4-6%EF%BC%9A%E5%BB%BA%E7%AB%8B%E5%8A%A0%E5%AF%86%E9%80%9A%E4%BF%A1"><span class="toc-number">1.2.6.</span> <span class="toc-text">步骤 6：建立加密通信</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#HTTP%E7%8A%B6%E6%80%81%E7%A0%81%E7%9A%84%E5%90%AB%E4%B9%89%EF%BC%9F"><span class="toc-number">1.3.</span> <span class="toc-text">HTTP状态码的含义？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#HTTP%E7%9A%84GET%E5%92%8CPOST%E6%96%B9%E6%B3%95%E5%8C%BA%E5%88%AB%EF%BC%9F%E9%87%8D%E8%A6%81"><span class="toc-number">1.4.</span> <span class="toc-text">HTTP的GET和POST方法区别？重要</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#TCP%E7%9A%84%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%EF%BC%9F"><span class="toc-number">1.5.</span> <span class="toc-text">TCP的三次握手？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#TCP%E7%9A%84%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B%EF%BC%9F"><span class="toc-number">1.6.</span> <span class="toc-text">TCP的四次挥手？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#OSI%E7%9A%847%E5%B1%82%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B%EF%BC%9F"><span class="toc-number">1.7.</span> <span class="toc-text">OSI的7层网络模型？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#TCP-IP%E7%9A%84%E5%9B%9B%E5%B1%82%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B%EF%BC%9F"><span class="toc-number">1.8.</span> <span class="toc-text">TCP&#x2F;IP的四层网络模型？</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Post</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2025/04/07/linux-app/" title="linux app(1)"><img src="https://image.jiajie.me/img/Embedded system/linux_cover.png" onerror="this.onerror=null;this.src='/assests/404.png'" alt="linux app(1)"/></a><div class="content"><a class="title" href="/2025/04/07/linux-app/" title="linux app(1)">linux app(1)</a><time datetime="2025-04-07T09:05:48.000Z" title="Created 2025-04-07 17:05:48">2025-04-07</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/04/07/FreeRTOS/" title="FreeRTOS 基础"><img src="https://image.jiajie.me/img/Embedded system/freertos.jpg" onerror="this.onerror=null;this.src='/assests/404.png'" alt="FreeRTOS 基础"/></a><div class="content"><a class="title" href="/2025/04/07/FreeRTOS/" title="FreeRTOS 基础">FreeRTOS 基础</a><time datetime="2025-04-07T09:00:10.000Z" title="Created 2025-04-07 17:00:10">2025-04-07</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2023 - 2025 By WildIronJay</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Switch Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between single-column and double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><button id="chat_btn" type="button" title="Chat"><i class="fas fa-sms"></i></button><button id="go-up" type="button" title="Back To Top"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><div class="js-pjax"></div><script defer src="/js/cursor.js"></script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="true"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><!-- hexo injector body_end start --><script data-pjax>
+  function butterfly_clock_anzhiyu_injector_config(){
+    var parent_div_git = document.getElementsByClassName('sticky_layout')[0];
+    var item_html = '<div class="card-widget card-clock"><div class="card-glass"><div class="card-background"><div class="card-content"><div id="hexo_electric_clock"><img class="entered loading" id="card-clock-loading" src="https://cdn.cbd.int/hexo-butterfly-clock-anzhiyu/lib/loading.gif" style="height: 120px; width: 100%;" data-ll-status="loading"/></div></div></div></div></div>';
+    console.log('已挂载butterfly_clock_anzhiyu')
+    if(parent_div_git) {
+      parent_div_git.insertAdjacentHTML("afterbegin",item_html)
+    }
+  }
+  var elist = 'null'.split(',');
+  var cpage = location.pathname;
+  var epage = '/';
+  var qweather_key = 'c948a17d32c44033a149cbce4f29b58d';
+  var gaud_map_key = 'f2d32668a84eb7d9adb95c257d70fb30';
+  var baidu_ak_key = 'undefined';
+  var flag = 0;
+  var clock_rectangle = '113.34532,23.15624';
+  var clock_default_rectangle_enable = 'false';
+
+  for (var i=0;i<elist.length;i++){
+    if (cpage.includes(elist[i])){
+      flag++;
+    }
+  }
+
+  if ((epage ==='all')&&(flag == 0)){
+    butterfly_clock_anzhiyu_injector_config();
+  }
+  else if (epage === cpage){
+    butterfly_clock_anzhiyu_injector_config();
+  }
+  </script><script src="https://widget.qweather.net/simple/static/js/he-simple-common.js?v=2.0"></script><script data-pjax src="https://cdn.cbd.int/hexo-butterfly-clock-anzhiyu/lib/clock.min.js"></script><!-- hexo injector body_end end --><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"left","width":150,"height":300},"mobile":{"show":true},"log":false});</script></body></html>

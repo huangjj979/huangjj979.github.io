@@ -1,0 +1,480 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>linux app(1) | WildIronJay</title><meta name="author" content="WildIronJay"><meta name="copyright" content="WildIronJay"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="本笔记基于MX6ULL为板载核心，使用正点原子alpha板。 eMMCeMMC（embedded MultiMediaCard）是一种嵌入式存储解决方案，广泛应用于智能手机、平板电脑、物联网设备、车载系统等嵌入式设备中。它结合了 NAND Flash 存储芯片 和 控制器，并通过标准接口与主机（如处理器或 SoC）通信。成本低，但通信速率低于UFS，更低于SSD，主要应用在低端设备。 eMMC 的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="linux app(1)">
+<meta property="og:url" content="https://myblog-mu-ashen.vercel.app/2025/04/07/linux-app/index.html">
+<meta property="og:site_name" content="WildIronJay">
+<meta property="og:description" content="本笔记基于MX6ULL为板载核心，使用正点原子alpha板。 eMMCeMMC（embedded MultiMediaCard）是一种嵌入式存储解决方案，广泛应用于智能手机、平板电脑、物联网设备、车载系统等嵌入式设备中。它结合了 NAND Flash 存储芯片 和 控制器，并通过标准接口与主机（如处理器或 SoC）通信。成本低，但通信速率低于UFS，更低于SSD，主要应用在低端设备。 eMMC 的">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://image.jiajie.me/img/Embedded%20system/linux_cover.png">
+<meta property="article:published_time" content="2025-04-07T09:05:48.000Z">
+<meta property="article:modified_time" content="2025-04-07T09:10:47.636Z">
+<meta property="article:author" content="WildIronJay">
+<meta property="article:tag" content="linux">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://image.jiajie.me/img/Embedded%20system/linux_cover.png"><link rel="shortcut icon" href="https://image.jiajie.me/img/image0.jpeg"><link rel="canonical" href="https://myblog-mu-ashen.vercel.app/2025/04/07/linux-app/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//fonts.googleapis.com" crossorigin=""/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Titillium+Web&amp;display=swap" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: 'Just',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'linux app(1)',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: undefined,
+  isToc: true,
+  postUpdate: '2025-04-07 17:10:47'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><link rel="stylesheet" href="/css/custom.css"><!-- hexo injector head_end start --><link rel="stylesheet" href="https://cdn.cbd.int/hexo-butterfly-clock-anzhiyu/lib/clock.min.css" /><!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://image.jiajie.me/img/image0.jpeg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">24</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">13</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">5</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-heartbeat"></i><span> 清单</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://image.jiajie.me/img/Embedded system/linux_cover.png')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">WildIronJay</a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-heartbeat"></i><span> 清单</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">linux app(1)</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2025-04-07T09:05:48.000Z" title="Created 2025-04-07 17:05:48">2025-04-07</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2025-04-07T09:10:47.636Z" title="Updated 2025-04-07 17:10:47">2025-04-07</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="linux app(1)"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post View:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p>本笔记基于MX6ULL为板载核心，使用正点原子alpha板。</p>
+<h2 id="eMMC"><a href="#eMMC" class="headerlink" title="eMMC"></a>eMMC</h2><p><strong>eMMC</strong>（<strong>embedded MultiMediaCard</strong>）是一种嵌入式存储解决方案，广泛应用于智能手机、平板电脑、物联网设备、车载系统等嵌入式设备中。它结合了 <strong>NAND Flash 存储芯片</strong> 和 <strong>控制器</strong>，并通过标准接口与主机（如处理器或 SoC）通信。成本低，但通信速率低于UFS，更低于<strong>SSD</strong>，主要应用在低端设备。</p>
+<h3 id="eMMC-的基本组成"><a href="#eMMC-的基本组成" class="headerlink" title="eMMC 的基本组成"></a><strong>eMMC 的基本组成</strong></h3><p>eMMC 并不是单纯的存储芯片，而是一个完整的存储模块，主要由以下部分组成：</p>
+<ul>
+<li><strong>NAND Flash 存储芯片</strong>：用于实际数据存储。</li>
+<li><strong>Flash 控制器</strong>：管理 NAND Flash 的读写、坏块管理、磨损均衡（wear leveling）、错误校验（ECC）等。</li>
+<li><strong>标准接口（MMC 接口）</strong>：采用 <strong>JEDEC eMMC 标准</strong>，兼容性强，简化了主控设计。</li>
+</ul>
+<h3 id="使用方式和作用"><a href="#使用方式和作用" class="headerlink" title="使用方式和作用"></a>使用方式和作用</h3><ul>
+<li><p><strong>烧录方法</strong>：可通过 SD 卡、USB 工具</p>
+</li>
+<li><p><strong>Linux 系统和应用程序通常会被烧录到 eMMC 存储中，并通过配置启动模式（如 eMMC 启动）来运行系统</strong>。</p>
+</li>
+<li><p><strong>本质</strong>：eMMC &#x3D; <strong>NAND Flash（存储） + 控制器（管理 Flash）</strong>，相当于一个 <strong>“自带管理器的硬盘”</strong>。</p>
+</li>
+<li><p><strong>存储内容</strong>：</p>
+<ul>
+<li><code>Bootloader</code>（如 U-Boot）</li>
+<li><code>Linux 内核</code>（如 <code>zImage</code>）</li>
+<li><code>根文件系统</code>（如 <code>rootfs.ext4</code>）</li>
+</ul>
+</li>
+</ul>
+<h3 id="eMMC-和普通-NAND-Flash-的区别？"><a href="#eMMC-和普通-NAND-Flash-的区别？" class="headerlink" title="eMMC 和普通 NAND Flash 的区别？"></a><strong>eMMC 和普通 NAND Flash 的区别？</strong></h3><ul>
+<li><strong>eMMC</strong>：自带控制器，主控芯片直接通过标准接口读写（简单，适合嵌入式）。</li>
+<li><strong>原始 NAND Flash</strong>：需要主控芯片实现坏块管理、ECC 校验等（复杂，需额外驱动）。</li>
+</ul>
+<h3 id="嵌入式设备的核心组件类比（以-i-MX6ULL-为例）"><a href="#嵌入式设备的核心组件类比（以-i-MX6ULL-为例）" class="headerlink" title="嵌入式设备的核心组件类比（以 i.MX6ULL 为例）"></a><strong>嵌入式设备的核心组件类比（以 i.MX6ULL 为例）</strong></h3><table>
+<thead>
+<tr>
+<th align="center">组件</th>
+<th align="center">电脑类比</th>
+<th align="center">嵌入式设备（如 i.MX6ULL）</th>
+<th align="center">作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"><strong>eMMC</strong></td>
+<td align="center"><strong>硬盘（SSD&#x2F;HDD）</strong></td>
+<td align="center">嵌入式存储芯片（如 8GB eMMC）</td>
+<td align="center">存储系统（Linux内核、根文件系统）、应用程序、用户数据，<strong>非易失性</strong>（断电不丢失）。</td>
+</tr>
+<tr>
+<td align="center"><strong>RAM（如 DDR3）</strong></td>
+<td align="center"><strong>内存条</strong></td>
+<td align="center">动态内存（如 256MB&#x2F;512MB DDR3）</td>
+<td align="center">临时存储运行时的程序和数据，<strong>易失性</strong>（断电丢失）。</td>
+</tr>
+<tr>
+<td align="center"><strong>主控芯片</strong></td>
+<td align="center"><strong>CPU</strong></td>
+<td align="center">处理器（如 NXP i.MX6ULL）</td>
+<td align="center">执行计算、控制外设（USB、GPIO、网络等），运行操作系统（如 Linux）。</td>
+</tr>
+<tr>
+<td align="center"><strong>Boot ROM</strong></td>
+<td align="center"><strong>BIOS&#x2F;UEFI</strong></td>
+<td align="center">芯片内置的 BootROM</td>
+<td align="center">初始化硬件，加载第一级 Bootloader（如 U-Boot）。</td>
+</tr>
+</tbody></table>
+<h2 id="NFS（Network-File-System）服务"><a href="#NFS（Network-File-System）服务" class="headerlink" title="NFS（Network File System）服务"></a>NFS<strong>（Network File System）服务</strong></h2><p>NFS（Network File System，网络文件系统）是一种分布式文件系统协议，由 <strong>Sun Microsystems</strong> 开发，允许计算机系统通过网络共享文件和目录。它广泛应用于 <strong>Linux&#x2F;Unix</strong> 环境，使客户端可以像访问本地文件一样访问远程服务器上的文件。经过我的尝试，无法在WSL（1）上通过nfs挂载其他linux系统进行嵌入式开发。</p>
+<h3 id="通信流程"><a href="#通信流程" class="headerlink" title="通信流程"></a><strong>通信流程</strong></h3><ol>
+<li><strong>服务器端</strong> 启动 <code>nfs-server</code> 并导出（export）共享目录。</li>
+<li><strong>客户端</strong> 请求挂载远程目录，通过 RPC 协议与服务器交互。</li>
+<li>数据传输：<ul>
+<li>客户端读写文件时，NFS 协议将请求转发到服务器。</li>
+<li>服务器处理请求并返回数据，客户端无感知（透明访问）。</li>
+</ul>
+</li>
+</ol>
+<h3 id="配置方法"><a href="#配置方法" class="headerlink" title="配置方法"></a>配置方法</h3><p>除了不能再WSL上配置可以在虚拟机、或Linux系统下配置：</p>
+<p>Ubuntu 使用如下命令安装 NFS 服务：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install nfs-kernel-server rpcbind</span><br></pre></td></tr></table></figure>
+
+<p>使用如下命令打开 nfs 配置文件&#x2F;etc&#x2F;exports：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vi /etc/exports</span><br></pre></td></tr></table></figure>
+
+<p>打开&#x2F;etc&#x2F;exports 以后在后面添加如下所示内容：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/home/user/linux/nfs *(rw,<span class="built_in">sync</span>,no_root_squash)</span><br></pre></td></tr></table></figure>
+
+<p>重启 NFS 服务，使用命令如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo /etc/init.d/nfs-kernel-server restart</span><br></pre></td></tr></table></figure>
+
+<p>最后使用如下命令在嵌入端进行挂载：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mount -t nfs -o nolock,vers=3 192.168.5.11:/home/user/nfs_rootfs /mnt</span><br></pre></td></tr></table></figure>
+
+<p>在开发过程中，在 Ubuntu 中编译好程序后放入&#x2F;home&#x2F;book&#x2F;nfs_rootfs目录，开发板 mount nfs 后就可以直接通过&#x2F;mnt 访问 Ubuntu 中的文件。</p>
+<h2 id="远程访问开发板"><a href="#远程访问开发板" class="headerlink" title="远程访问开发板"></a>远程访问开发板</h2><p>远程命令使用开发板的三种方式：</p>
+<ol>
+<li><p>使用串口连接后通过MobaXterm通过指定串口和波特率（115200）后进行访问。</p>
+</li>
+<li><p>windows端与开发板连接到同一个局域网后，通过MobaXterm的ssh指定IP和端口（22）后访问。</p>
+</li>
+<li><p>在linux端（ubuntu）无法使用MobaXterm，可以直接在终端中通过ssh进行访问，命令如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh root@192.168.X.XXX</span><br></pre></td></tr></table></figure></li>
+</ol>
+<p>文件传输的两种方法：</p>
+<ol>
+<li>同一局域网下，使用Filezilla软件指定IP和端口号（22）后进行传输</li>
+<li>相同的方式，使用WinSCP</li>
+</ol>
+<h1 id="GCC"><a href="#GCC" class="headerlink" title="**GCC **"></a>**GCC **</h1><p>交叉编译工具有OpenWrt，Buildroot，Linaro的，选择：</p>
+<p>Linaro出品的交叉编译器：arm-linux-gnueabihf-gcc</p>
+<h2 id="编译流程"><a href="#编译流程" class="headerlink" title="编译流程"></a>编译流程</h2><p>GCC 的编译过程分为 <strong>4 个阶段</strong>：</p>
+<p><img src="https://image.jiajie.me/img/program%20language/gcc.png" alt="gcc"></p>
+<h3 id="（1）预处理（Preprocessing）"><a href="#（1）预处理（Preprocessing）" class="headerlink" title="（1）预处理（Preprocessing）"></a><strong>（1）预处理（Preprocessing）</strong></h3><ul>
+<li><p>处理 <code>#include</code>、<code>#define</code>、<code>#ifdef</code> 等宏指令。</p>
+</li>
+<li><p>命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc -E hello.c -o hello.i  <span class="comment"># 生成预处理文件</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="（2）编译（Compilation）"><a href="#（2）编译（Compilation）" class="headerlink" title="（2）编译（Compilation）"></a><strong>（2）编译（Compilation）</strong></h3><ul>
+<li><p>将预处理后的代码转为汇编语言。</p>
+</li>
+<li><p>命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc -S hello.i -o hello.s  <span class="comment"># 生成汇编代码</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="（3）汇编（Assembly）"><a href="#（3）汇编（Assembly）" class="headerlink" title="（3）汇编（Assembly）"></a><strong>（3）汇编（Assembly）</strong></h3><ul>
+<li><p>将汇编代码转为机器码（目标文件 <code>.o</code>）。</p>
+</li>
+<li><p>命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc -c hello.s -o hello.o  <span class="comment"># 生成目标文件</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="（4）链接（Linking）"><a href="#（4）链接（Linking）" class="headerlink" title="（4）链接（Linking）"></a><strong>（4）链接（Linking）</strong></h3><ul>
+<li><p>合并目标文件和库文件（如 <code>libc.so</code>），生成可执行文件。</p>
+</li>
+<li><p>命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc hello.o -o hello  <span class="comment"># 生成可执行文件</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<blockquote>
+<p><strong>简化命令</strong>：直接生成可执行文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc hello.c -o hello</span><br></pre></td></tr></table></figure>
+</blockquote>
+<h3 id="GCC-常用编译选项"><a href="#GCC-常用编译选项" class="headerlink" title="GCC 常用编译选项"></a><strong>GCC 常用编译选项</strong></h3><h3 id="（1）基础选项"><a href="#（1）基础选项" class="headerlink" title="（1）基础选项"></a><strong>（1）基础选项</strong></h3><table>
+<thead>
+<tr>
+<th align="center">选项</th>
+<th align="center">说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"><code>-o &lt;file&gt;</code></td>
+<td align="center">指定输出文件名（默认 <code>a.out</code>）。</td>
+</tr>
+<tr>
+<td align="center"><code>-c</code></td>
+<td align="center">只编译不链接，生成 <code>.o</code> 目标文件。</td>
+</tr>
+<tr>
+<td align="center"><code>-g</code></td>
+<td align="center">添加调试信息（供 GDB 使用）。</td>
+</tr>
+<tr>
+<td align="center"><code>-Wall</code></td>
+<td align="center">启用所有警告（推荐始终使用）。</td>
+</tr>
+<tr>
+<td align="center"><code>-O0/-O1/-O2/-O3</code></td>
+<td align="center">优化级别（<code>-O0</code> 不优化，<code>-O3</code> 最高优化）。</td>
+</tr>
+</tbody></table>
+<h3 id="（2）库和路径选项"><a href="#（2）库和路径选项" class="headerlink" title="（2）库和路径选项"></a><strong>（2）库和路径选项</strong></h3><table>
+<thead>
+<tr>
+<th align="center">选项</th>
+<th align="center">说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"><code>-I&lt;dir&gt;</code></td>
+<td align="center">添加头文件搜索路径（如 <code>-I/usr/local/include</code>）。</td>
+</tr>
+<tr>
+<td align="center"><code>-L&lt;dir&gt;</code></td>
+<td align="center">添加库文件搜索路径（如 <code>-L/usr/local/lib</code>）。</td>
+</tr>
+<tr>
+<td align="center"><code>-l&lt;library&gt;</code></td>
+<td align="center">链接动态库（如 <code>-lm</code> 链接数学库 <code>libm.so</code>）。</td>
+</tr>
+<tr>
+<td align="center"><code>-static</code></td>
+<td align="center">静态编译（将所有库打包进可执行文件）。</td>
+</tr>
+</tbody></table>
+<h3 id="（3）调试与优化"><a href="#（3）调试与优化" class="headerlink" title="（3）调试与优化"></a><strong>（3）调试与优化</strong></h3><table>
+<thead>
+<tr>
+<th align="center">选项</th>
+<th align="center">说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"><code>-D&lt;macro&gt;</code></td>
+<td align="center">定义宏（如 <code>-DDEBUG</code> 等价于 <code>#define DEBUG</code>）。</td>
+</tr>
+<tr>
+<td align="center"><code>-fPIC</code></td>
+<td align="center">生成位置无关代码（用于动态库）。</td>
+</tr>
+<tr>
+<td align="center"><code>-save-temps</code></td>
+<td align="center">保留临时文件（<code>.i</code>、<code>.s</code>、<code>.o</code>）。</td>
+</tr>
+</tbody></table>
+<h2 id="操作文件I-O"><a href="#操作文件I-O" class="headerlink" title="操作文件I&#x2F;O"></a>操作文件I&#x2F;O</h2><p>在 Linux 系统中，文件 I&#x2F;O（输入&#x2F;输出）操作可以通过两种主要方式实现：<strong>标准 I&#x2F;O（Standard I&#x2F;O）</strong> 和 <strong>系统 I&#x2F;O（System I&#x2F;O）</strong>。它们的主要区别在于接口层次、缓冲机制、性能以及适用场景。</p>
+<h3 id="1-标准-I-O（Standard-I-O）"><a href="#1-标准-I-O（Standard-I-O）" class="headerlink" title="1. 标准 I&#x2F;O（Standard I&#x2F;O）"></a><strong>1. 标准 I&#x2F;O（Standard I&#x2F;O）</strong></h3><p>标准 I&#x2F;O 是由 <strong>C 标准库（libc）</strong> 提供的高级文件操作接口，封装了底层系统调用，提供缓冲机制，以提高 I&#x2F;O 效率。</p>
+<h4 id="特点"><a href="#特点" class="headerlink" title="特点"></a><strong>特点</strong></h4><ul>
+<li><strong>基于流（FILE*）</strong>：使用 <code>FILE*</code> 结构体表示文件流。</li>
+<li>带缓冲（Buffered）：<ul>
+<li><strong>全缓冲（Fully Buffered）</strong>：当缓冲区满时才进行实际 I&#x2F;O（适用于文件）。</li>
+<li><strong>行缓冲（Line Buffered）</strong>：遇到换行符 <code>\n</code> 或缓冲区满时刷新（适用于终端）。</li>
+<li><strong>无缓冲（Unbuffered）</strong>：立即写入（如 <code>stderr</code>）。</li>
+</ul>
+</li>
+<li><strong>跨平台兼容</strong>：由于是 C 标准库的一部分，代码可移植性较好。</li>
+<li><strong>适用于频繁的小数据读写</strong>，减少系统调用次数，提高性能。</li>
+</ul>
+<h4 id="常用函数"><a href="#常用函数" class="headerlink" title="常用函数"></a><strong>常用函数</strong></h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line">FILE *<span class="title function_">fopen</span><span class="params">(<span class="type">const</span> <span class="type">char</span> *path, <span class="type">const</span> <span class="type">char</span> *mode)</span>;  <span class="comment">// 打开文件</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">fclose</span><span class="params">(FILE *stream)</span>;                         <span class="comment">// 关闭文件</span></span><br><span class="line"><span class="type">size_t</span> <span class="title function_">fread</span><span class="params">(<span class="type">void</span> *ptr, <span class="type">size_t</span> size, <span class="type">size_t</span> nmemb, FILE *stream)</span>;  <span class="comment">// 读数据</span></span><br><span class="line"><span class="type">size_t</span> <span class="title function_">fwrite</span><span class="params">(<span class="type">const</span> <span class="type">void</span> *ptr, <span class="type">size_t</span> size, <span class="type">size_t</span> nmemb, FILE *stream)</span>;  <span class="comment">// 写数据</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">fseek</span><span class="params">(FILE *stream, <span class="type">long</span> offset, <span class="type">int</span> whence)</span>;  <span class="comment">// 移动文件指针</span></span><br><span class="line"><span class="type">long</span> <span class="title function_">ftell</span><span class="params">(FILE *stream)</span>;                          <span class="comment">// 获取当前文件位置</span></span><br><span class="line"><span class="type">char</span> *<span class="title function_">fgets</span><span class="params">(<span class="type">char</span> *s, <span class="type">int</span> size, FILE *stream)</span>;      <span class="comment">// 读取一行</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">fprintf</span><span class="params">(FILE *stream, <span class="type">const</span> <span class="type">char</span> *format, ...)</span>; <span class="comment">// 格式化输出</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="示例"><a href="#示例" class="headerlink" title="示例"></a><strong>示例</strong></h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span> &#123;</span><br><span class="line">    FILE *fp = fopen(<span class="string">&quot;test.txt&quot;</span>, <span class="string">&quot;w&quot;</span>);</span><br><span class="line">    <span class="keyword">if</span> (!fp) &#123;</span><br><span class="line">        perror(<span class="string">&quot;fopen failed&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">fprintf</span>(fp, <span class="string">&quot;Hello, Standard I/O!\n&quot;</span>);</span><br><span class="line">    fclose(fp);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-系统-I-O（System-I-O-Unix-I-O）"><a href="#2-系统-I-O（System-I-O-Unix-I-O）" class="headerlink" title="2. 系统 I&#x2F;O（System I&#x2F;O &#x2F; Unix I&#x2F;O）"></a><strong>2. 系统 I&#x2F;O（System I&#x2F;O &#x2F; Unix I&#x2F;O）</strong></h3><p>系统 I&#x2F;O 是 Linux&#x2F;Unix 提供的 <strong>底层文件操作接口</strong>，直接调用内核提供的系统调用（syscalls），不提供缓冲机制。</p>
+<h4 id="特点-1"><a href="#特点-1" class="headerlink" title="特点"></a><strong>特点</strong></h4><ul>
+<li><strong>基于文件描述符（File Descriptor, fd）</strong>：使用整数 <code>int</code> 表示文件（如 <code>0=stdin, 1=stdout, 2=stderr</code>）。</li>
+<li><strong>无缓冲（Unbuffered）</strong>：每次读写都会触发系统调用，效率较低但更可控。</li>
+<li><strong>适用于高性能、低延迟场景</strong>（如网络编程、设备驱动）。</li>
+<li><strong>更底层，灵活性更高</strong>，可以直接操作设备文件、管道、套接字等。</li>
+</ul>
+<h4 id="常用函数-1"><a href="#常用函数-1" class="headerlink" title="常用函数"></a><strong>常用函数</strong></h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;fcntl.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/stat.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">open</span><span class="params">(<span class="type">const</span> <span class="type">char</span> *pathname, <span class="type">int</span> flags, <span class="type">mode_t</span> mode)</span>;  <span class="comment">// 打开文件</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">close</span><span class="params">(<span class="type">int</span> fd)</span>;                                      <span class="comment">// 关闭文件</span></span><br><span class="line"><span class="type">ssize_t</span> <span class="title function_">read</span><span class="params">(<span class="type">int</span> fd, <span class="type">void</span> *buf, <span class="type">size_t</span> count)</span>;          <span class="comment">// 读数据</span></span><br><span class="line"><span class="type">ssize_t</span> <span class="title function_">write</span><span class="params">(<span class="type">int</span> fd, <span class="type">const</span> <span class="type">void</span> *buf, <span class="type">size_t</span> count)</span>;   <span class="comment">// 写数据</span></span><br><span class="line"><span class="type">off_t</span> <span class="title function_">lseek</span><span class="params">(<span class="type">int</span> fd, <span class="type">off_t</span> offset, <span class="type">int</span> whence)</span>;          <span class="comment">// 移动文件指针</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">fcntl</span><span class="params">(<span class="type">int</span> fd, <span class="type">int</span> cmd, ...)</span>;                        <span class="comment">// 控制文件描述符</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="示例-1"><a href="#示例-1" class="headerlink" title="示例"></a><strong>示例</strong></h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;fcntl.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="type">int</span> fd = open(<span class="string">&quot;test.txt&quot;</span>, O_WRONLY | O_CREAT, <span class="number">0644</span>);</span><br><span class="line">    <span class="keyword">if</span> (fd == <span class="number">-1</span>) &#123;</span><br><span class="line">        perror(<span class="string">&quot;open failed&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    write(fd, <span class="string">&quot;Hello, System I/O!\n&quot;</span>, <span class="number">19</span>);</span><br><span class="line">    close(fd);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-主要区别对比"><a href="#3-主要区别对比" class="headerlink" title="3. 主要区别对比"></a><strong>3. 主要区别对比</strong></h3><table>
+<thead>
+<tr>
+<th align="center"><strong>特性</strong></th>
+<th align="center"><strong>标准 I&#x2F;O（stdio）</strong></th>
+<th align="center"><strong>系统 I&#x2F;O（syscall）</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"><strong>接口级别</strong></td>
+<td align="center">高级（C 标准库封装）</td>
+<td align="center">低级（直接系统调用）</td>
+</tr>
+<tr>
+<td align="center"><strong>缓冲机制</strong></td>
+<td align="center">有缓冲（可配置）</td>
+<td align="center">无缓冲（直接读写）</td>
+</tr>
+<tr>
+<td align="center"><strong>性能</strong></td>
+<td align="center">较高（减少系统调用）</td>
+<td align="center">较低（每次调用都进内核）</td>
+</tr>
+<tr>
+<td align="center"><strong>适用场景</strong></td>
+<td align="center">普通文件、文本处理</td>
+<td align="center">设备文件、网络、底层开发</td>
+</tr>
+<tr>
+<td align="center"><strong>文件表示</strong></td>
+<td align="center"><code>FILE*</code>（流）</td>
+<td align="center"><code>int</code>（文件描述符）</td>
+</tr>
+<tr>
+<td align="center"><strong>移植性</strong></td>
+<td align="center">高（跨平台）</td>
+<td align="center">低（依赖 Unix&#x2F;Linux）</td>
+</tr>
+<tr>
+<td align="center"><strong>控制灵活性</strong></td>
+<td align="center">较低（缓冲不可控）</td>
+<td align="center">高（直接控制）</td>
+</tr>
+</tbody></table>
+<h3 id="4-如何选择？"><a href="#4-如何选择？" class="headerlink" title="4. 如何选择？"></a><strong>4. 如何选择？</strong></h3><ul>
+<li>使用标准 I&#x2F;O（<code>fopen/fread/fwrite</code>）：<ul>
+<li>需要处理文本文件、格式化输入输出。</li>
+<li>需要缓冲机制提高性能（如频繁的小数据读写）。</li>
+<li>希望代码可移植到其他平台（Windows&#x2F;macOS）。</li>
+</ul>
+</li>
+<li>使用系统 I&#x2F;O（<code>open/read/write</code>）：<ul>
+<li>需要直接操作设备文件（如 <code>/dev</code> 下的设备）。</li>
+<li>需要非阻塞 I&#x2F;O 或文件锁（<code>fcntl</code>）。</li>
+<li>进行网络编程（套接字 <code>socket</code> 也是文件描述符）。</li>
+<li>需要精确控制 I&#x2F;O 行为（如 <code>O_DIRECT</code> 绕过缓存）。</li>
+</ul>
+</li>
+</ul>
+<h3 id="5-混合使用"><a href="#5-混合使用" class="headerlink" title="5. 混合使用"></a><strong>5. 混合使用</strong></h3><p>在某些情况下，可以混合使用两者：</p>
+<ul>
+<li><p>使用<code>fileno()</code>将<code>FILE*</code>转换为文件描述符：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">FILE *fp = fopen(<span class="string">&quot;file.txt&quot;</span>, <span class="string">&quot;r&quot;</span>);</span><br><span class="line"><span class="type">int</span> fd = fileno(fp);  <span class="comment">// 获取底层文件描述符</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>使用<code>fdopen()</code>将文件描述符转换为<code>FILE*</code>：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> fd = open(<span class="string">&quot;file.txt&quot;</span>, O_RDONLY);</span><br><span class="line">FILE *fp = fdopen(fd, <span class="string">&quot;r&quot;</span>);  <span class="comment">// 包装成标准 I/O 流</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="Others"><a href="#Others" class="headerlink" title="Others"></a>Others</h2><p>修改DNS配置：</p>
+<p>打开<code>/etc/resolv.conf</code>，添加修改<code>nameserver 8.8.8.8</code></p>
+<p>详细：<a target="_blank" rel="noopener" href="https://akaedu.github.io/book/ch36s05.html">IP地址与路由</a></p>
+</article><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/linux/">linux</a></div><div class="post_share"><div class="social-share" data-image="https://image.jiajie.me/img/Embedded system/linux_cover.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2025/04/07/FreeRTOS/"><img class="next-cover" src="https://image.jiajie.me/img/Embedded system/freertos.jpg" onerror="onerror=null;src='/assests/404.png'" alt="cover of next post"><div class="pagination-info"><div class="label">Next Post</div><div class="next_info">FreeRTOS 基础</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://image.jiajie.me/img/image0.jpeg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">WildIronJay</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">24</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">13</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">5</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/huangjj979"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/huangjj979" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:3201223340@qq.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content"><center><b>Welcome to HJJ's Blog<br><b>--- 网站域名 ---<br><a target="_blank" rel="noopener" href="https://www.jiajie.me" title="网站域名" class="anno_content"><font color="#5ea6e5">jiajie.me</font></a><br>--- 🍧ChatGPT🍧 ---<br><a target="_blank" rel="noopener" href="http://120.26.208.83:3000" title="自己搭建的chatgpt" class="anno_content"><font color="#5ea6e5">ChatGPT</font></a></center></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Catalog</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#eMMC"><span class="toc-number">1.</span> <span class="toc-text">eMMC</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#eMMC-%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%BB%84%E6%88%90"><span class="toc-number">1.1.</span> <span class="toc-text">eMMC 的基本组成</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E6%96%B9%E5%BC%8F%E5%92%8C%E4%BD%9C%E7%94%A8"><span class="toc-number">1.2.</span> <span class="toc-text">使用方式和作用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#eMMC-%E5%92%8C%E6%99%AE%E9%80%9A-NAND-Flash-%E7%9A%84%E5%8C%BA%E5%88%AB%EF%BC%9F"><span class="toc-number">1.3.</span> <span class="toc-text">eMMC 和普通 NAND Flash 的区别？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B5%8C%E5%85%A5%E5%BC%8F%E8%AE%BE%E5%A4%87%E7%9A%84%E6%A0%B8%E5%BF%83%E7%BB%84%E4%BB%B6%E7%B1%BB%E6%AF%94%EF%BC%88%E4%BB%A5-i-MX6ULL-%E4%B8%BA%E4%BE%8B%EF%BC%89"><span class="toc-number">1.4.</span> <span class="toc-text">嵌入式设备的核心组件类比（以 i.MX6ULL 为例）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#NFS%EF%BC%88Network-File-System%EF%BC%89%E6%9C%8D%E5%8A%A1"><span class="toc-number">2.</span> <span class="toc-text">NFS（Network File System）服务</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%80%9A%E4%BF%A1%E6%B5%81%E7%A8%8B"><span class="toc-number">2.1.</span> <span class="toc-text">通信流程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E6%96%B9%E6%B3%95"><span class="toc-number">2.2.</span> <span class="toc-text">配置方法</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%9C%E7%A8%8B%E8%AE%BF%E9%97%AE%E5%BC%80%E5%8F%91%E6%9D%BF"><span class="toc-number">3.</span> <span class="toc-text">远程访问开发板</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#GCC"><span class="toc-number"></span> <span class="toc-text">**GCC **</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BC%96%E8%AF%91%E6%B5%81%E7%A8%8B"><span class="toc-number">1.</span> <span class="toc-text">编译流程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%EF%BC%881%EF%BC%89%E9%A2%84%E5%A4%84%E7%90%86%EF%BC%88Preprocessing%EF%BC%89"><span class="toc-number">1.1.</span> <span class="toc-text">（1）预处理（Preprocessing）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%EF%BC%882%EF%BC%89%E7%BC%96%E8%AF%91%EF%BC%88Compilation%EF%BC%89"><span class="toc-number">1.2.</span> <span class="toc-text">（2）编译（Compilation）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%EF%BC%883%EF%BC%89%E6%B1%87%E7%BC%96%EF%BC%88Assembly%EF%BC%89"><span class="toc-number">1.3.</span> <span class="toc-text">（3）汇编（Assembly）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%EF%BC%884%EF%BC%89%E9%93%BE%E6%8E%A5%EF%BC%88Linking%EF%BC%89"><span class="toc-number">1.4.</span> <span class="toc-text">（4）链接（Linking）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#GCC-%E5%B8%B8%E7%94%A8%E7%BC%96%E8%AF%91%E9%80%89%E9%A1%B9"><span class="toc-number">1.5.</span> <span class="toc-text">GCC 常用编译选项</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%EF%BC%881%EF%BC%89%E5%9F%BA%E7%A1%80%E9%80%89%E9%A1%B9"><span class="toc-number">1.6.</span> <span class="toc-text">（1）基础选项</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%EF%BC%882%EF%BC%89%E5%BA%93%E5%92%8C%E8%B7%AF%E5%BE%84%E9%80%89%E9%A1%B9"><span class="toc-number">1.7.</span> <span class="toc-text">（2）库和路径选项</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%EF%BC%883%EF%BC%89%E8%B0%83%E8%AF%95%E4%B8%8E%E4%BC%98%E5%8C%96"><span class="toc-number">1.8.</span> <span class="toc-text">（3）调试与优化</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%93%8D%E4%BD%9C%E6%96%87%E4%BB%B6I-O"><span class="toc-number">2.</span> <span class="toc-text">操作文件I&#x2F;O</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E6%A0%87%E5%87%86-I-O%EF%BC%88Standard-I-O%EF%BC%89"><span class="toc-number">2.1.</span> <span class="toc-text">1. 标准 I&#x2F;O（Standard I&#x2F;O）</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%89%B9%E7%82%B9"><span class="toc-number">2.1.1.</span> <span class="toc-text">特点</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8%E5%87%BD%E6%95%B0"><span class="toc-number">2.1.2.</span> <span class="toc-text">常用函数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B"><span class="toc-number">2.1.3.</span> <span class="toc-text">示例</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E7%B3%BB%E7%BB%9F-I-O%EF%BC%88System-I-O-Unix-I-O%EF%BC%89"><span class="toc-number">2.2.</span> <span class="toc-text">2. 系统 I&#x2F;O（System I&#x2F;O &#x2F; Unix I&#x2F;O）</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%89%B9%E7%82%B9-1"><span class="toc-number">2.2.1.</span> <span class="toc-text">特点</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8%E5%87%BD%E6%95%B0-1"><span class="toc-number">2.2.2.</span> <span class="toc-text">常用函数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B-1"><span class="toc-number">2.2.3.</span> <span class="toc-text">示例</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E4%B8%BB%E8%A6%81%E5%8C%BA%E5%88%AB%E5%AF%B9%E6%AF%94"><span class="toc-number">2.3.</span> <span class="toc-text">3. 主要区别对比</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E5%A6%82%E4%BD%95%E9%80%89%E6%8B%A9%EF%BC%9F"><span class="toc-number">2.4.</span> <span class="toc-text">4. 如何选择？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E6%B7%B7%E5%90%88%E4%BD%BF%E7%94%A8"><span class="toc-number">2.5.</span> <span class="toc-text">5. 混合使用</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Others"><span class="toc-number">3.</span> <span class="toc-text">Others</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Post</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2025/04/07/linux-app/" title="linux app(1)"><img src="https://image.jiajie.me/img/Embedded system/linux_cover.png" onerror="this.onerror=null;this.src='/assests/404.png'" alt="linux app(1)"/></a><div class="content"><a class="title" href="/2025/04/07/linux-app/" title="linux app(1)">linux app(1)</a><time datetime="2025-04-07T09:05:48.000Z" title="Created 2025-04-07 17:05:48">2025-04-07</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/04/07/FreeRTOS/" title="FreeRTOS 基础"><img src="https://image.jiajie.me/img/Embedded system/freertos.jpg" onerror="this.onerror=null;this.src='/assests/404.png'" alt="FreeRTOS 基础"/></a><div class="content"><a class="title" href="/2025/04/07/FreeRTOS/" title="FreeRTOS 基础">FreeRTOS 基础</a><time datetime="2025-04-07T09:00:10.000Z" title="Created 2025-04-07 17:00:10">2025-04-07</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2023 - 2025 By WildIronJay</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Switch Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between single-column and double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><button id="chat_btn" type="button" title="Chat"><i class="fas fa-sms"></i></button><button id="go-up" type="button" title="Back To Top"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><div class="js-pjax"></div><script defer src="/js/cursor.js"></script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="true"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><!-- hexo injector body_end start --><script data-pjax>
+  function butterfly_clock_anzhiyu_injector_config(){
+    var parent_div_git = document.getElementsByClassName('sticky_layout')[0];
+    var item_html = '<div class="card-widget card-clock"><div class="card-glass"><div class="card-background"><div class="card-content"><div id="hexo_electric_clock"><img class="entered loading" id="card-clock-loading" src="https://cdn.cbd.int/hexo-butterfly-clock-anzhiyu/lib/loading.gif" style="height: 120px; width: 100%;" data-ll-status="loading"/></div></div></div></div></div>';
+    console.log('已挂载butterfly_clock_anzhiyu')
+    if(parent_div_git) {
+      parent_div_git.insertAdjacentHTML("afterbegin",item_html)
+    }
+  }
+  var elist = 'null'.split(',');
+  var cpage = location.pathname;
+  var epage = '/';
+  var qweather_key = 'c948a17d32c44033a149cbce4f29b58d';
+  var gaud_map_key = 'f2d32668a84eb7d9adb95c257d70fb30';
+  var baidu_ak_key = 'undefined';
+  var flag = 0;
+  var clock_rectangle = '113.34532,23.15624';
+  var clock_default_rectangle_enable = 'false';
+
+  for (var i=0;i<elist.length;i++){
+    if (cpage.includes(elist[i])){
+      flag++;
+    }
+  }
+
+  if ((epage ==='all')&&(flag == 0)){
+    butterfly_clock_anzhiyu_injector_config();
+  }
+  else if (epage === cpage){
+    butterfly_clock_anzhiyu_injector_config();
+  }
+  </script><script src="https://widget.qweather.net/simple/static/js/he-simple-common.js?v=2.0"></script><script data-pjax src="https://cdn.cbd.int/hexo-butterfly-clock-anzhiyu/lib/clock.min.js"></script><!-- hexo injector body_end end --><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"left","width":150,"height":300},"mobile":{"show":true},"log":false});</script></body></html>
